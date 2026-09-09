@@ -1,0 +1,26 @@
+{
+  "name": "QuantumX — Guide to the Quantum Era",
+  "short_name": "QuantumX",
+  "description": "Interactive quantum computing explainer: play with a real qubit, build entangling circuits, and explore where quantum could go by 2040 and beyond.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070912",
+  "theme_color": "#070912",
+  "categories": ["education", "science", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
