@@ -57,7 +57,8 @@ p{margin:.5em 0}
 
 /* ---------- top brand bar ---------- */
 .top{position:sticky; top:0; z-index:40; backdrop-filter:blur(14px);
-  background:linear-gradient(var(--void),rgba(7,9,18,.72)); border-bottom:1px solid var(--line)}
+  background:linear-gradient(var(--void),rgba(7,9,18,.72)); border-bottom:1px solid var(--line);
+  padding-top:env(safe-area-inset-top,0px)}
 .top .wrap{display:flex; align-items:center; gap:14px; height:58px}
 .logo{display:flex; align-items:center; gap:10px; font-family:"Bricolage Grotesque"; font-weight:800; letter-spacing:-.03em; font-size:1.18rem}
 .logo .mark{width:26px;height:26px;flex:0 0 auto}
@@ -229,6 +230,30 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
 .shots .col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px}
 .shots .bar{width:100%; border-radius:6px 6px 0 0; min-height:2px; transition:height .5s ease}
 .shots .k{font-family:"IBM Plex Mono"; font-size:.72rem; color:var(--muted)}
+
+/* ---------- LAB explainer helpers ---------- */
+.labguide{border:1px solid var(--line); border-radius:16px; background:
+  linear-gradient(180deg,rgba(27,37,64,.35),var(--panel)); padding:16px 16px 6px; margin-top:16px}
+.lg-steps{display:grid; grid-template-columns:1fr; gap:12px}
+@media(min-width:720px){.lg-steps{grid-template-columns:repeat(3,1fr)}}
+.lg-step{display:flex; gap:11px; align-items:flex-start; font-size:.92rem; line-height:1.5; color:var(--muted)}
+.lg-step b{color:var(--ink)}
+.lg-n{flex:0 0 auto; width:26px;height:26px;border-radius:50%; display:flex;align-items:center;justify-content:center;
+  font-family:"IBM Plex Mono"; font-weight:700; font-size:.85rem; color:var(--void);
+  background:linear-gradient(135deg,var(--zero),var(--violet))}
+.lg-legend{display:flex; flex-wrap:wrap; gap:8px 16px; margin:14px 0 10px; padding-top:12px; border-top:1px solid var(--line)}
+.lg-tag{display:inline-flex; align-items:center; gap:7px; font-size:.82rem; color:var(--muted)}
+.lg-tag b{color:var(--ink)}
+.lg-tag code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink); background:var(--panel2); border:1px solid var(--line); padding:1px 6px; border-radius:6px}
+.lg-tag .sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto}
+.lg-tag .sw.z{background:var(--zero)} .lg-tag .sw.o{background:var(--one)}
+.qsub{font-size:.86rem; line-height:1.5; color:var(--muted); margin:-4px 0 12px}
+.qsub code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink)}
+.qsub b{color:var(--ink)}
+.lookfor{margin-top:16px; padding:15px 17px; border-radius:14px; font-size:.94rem; line-height:1.6; color:var(--ink);
+  border:1px solid rgba(169,139,255,.42); background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(56,225,214,.05))}
+.lookfor code{font-family:"IBM Plex Mono"; color:var(--ink)}
+.lookfor .hl{color:var(--violet); font-weight:700}
 
 /* solve cards */
 .solve{border:1px solid var(--line); border-radius:14px; background:var(--panel); margin-top:12px; overflow:hidden}
@@ -562,7 +587,7 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
 
   <section class="block" style="border-top:0;padding-top:6px">
     <h3 style="font-size:1.25rem">Play with a qubit</h3>
-    <p class="kicker" style="margin-top:4px">One qubit, full control. Watch superposition and phase form and collapse.</p>
+    <p class="kicker" style="margin-top:4px">Start with one qubit. The sphere <i>is</i> the qubit's state — top means a guaranteed 0, bottom means a guaranteed 1, and anywhere in between is <b style="color:var(--ink)">superposition</b>. Tap the gates below to move it, and watch the two bars: they're the chance of measuring 0 versus 1 right now.</p>
     <div style="max-width:520px;margin-top:16px">
       <div class="stage">
         <canvas id="labBloch" width="640" height="520"></canvas>
@@ -578,8 +603,22 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
   </section>
 
   <section class="block">
-    <h3 style="font-size:1.25rem">Build a circuit</h3>
-    <p class="kicker" style="margin-top:4px">Two qubits, six columns. Select a gate, then tap a slot to place it. Place <b style="color:var(--ink)">H then CNOT</b> and you'll create entanglement.</p>
+    <h3 style="font-size:1.25rem">Build a circuit — and watch entanglement happen</h3>
+    <p class="kicker" style="margin-top:4px">This is a real 2-qubit quantum computer, simulated live in your browser. The two panels below always show the same story from two sides: what the physics <b style="color:var(--ink)">predicts</b>, and what actually <b style="color:var(--ink)">happens</b> when you measure. The whole point is to compare them.</p>
+
+    <div class="labguide">
+      <div class="lg-steps">
+        <div class="lg-step"><span class="lg-n">1</span><div><b>Place gates.</b> Tap a gate (H, X, Z, T, CNOT), then tap a slot on a wire to drop it in — or hit a <b>preset</b> to load a ready-made circuit.</div></div>
+        <div class="lg-step"><span class="lg-n">2</span><div><b>Read the prediction.</b> The left panel lists every possible result and how likely it is — before you measure anything.</div></div>
+        <div class="lg-step"><span class="lg-n">3</span><div><b>Run 200 shots.</b> This measures the circuit 200 times for real. The right panel shows where those random results actually landed.</div></div>
+      </div>
+      <div class="lg-legend">
+        <span class="lg-tag"><span class="sw z"></span>qubit reads <b>0</b></span>
+        <span class="lg-tag"><span class="sw o"></span>qubit reads <b>1</b></span>
+        <span class="lg-tag"><code>|0⟩</code> one qubit</span>
+        <span class="lg-tag"><code>|00⟩</code> both qubits, top then bottom</span>
+      </div>
+    </div>
 
     <div class="circuit">
       <div class="palette" id="palette">
@@ -598,14 +637,20 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
     <div class="qout">
       <div class="qpanel">
         <h4>Live state — amplitudes²</h4>
+        <p class="qsub"><b>The prediction.</b> How likely each result is <i>before</i> you measure. <code>|00⟩</code> means the top qubit reads 0 and the bottom reads 0. The four always add up to 100%.</p>
         <div id="ampList"></div>
         <div class="ent" id="entBox"></div>
       </div>
       <div class="qpanel">
         <h4>Measurement outcomes</h4>
+        <p class="qsub"><b>The reality.</b> 200 actual measurements. Each one forces the qubits to pick a single answer — the taller the bar, the more often that result came up.</p>
         <div class="shots" id="shotsBox"></div>
-        <p class="caption" style="font-size:.8rem;color:var(--muted);margin-top:10px" id="shotsNote">Run shots to sample real measurements. Each shot collapses the state to one classical result.</p>
+        <p class="caption" style="font-size:.8rem;color:var(--muted);margin-top:10px" id="shotsNote">Press <b style="color:var(--ink)">Run 200 shots</b> to sample real measurements. Each shot collapses the state to one classical result.</p>
       </div>
+    </div>
+
+    <div class="lookfor">
+      <span class="hl">👀 Try this to actually see it.</span> Load the <b>Bell state preset</b> and run shots: only <code>|00⟩</code> and <code>|11⟩</code> ever show up — <i>never</i> <code>|01⟩</code> or <code>|10⟩</code>. Each result is random, yet the two qubits <i>always agree</i>. That impossible-sounding agreement is what "entanglement" means, and you're watching it. Now load the <b>Superposition preset</b>: all four outcomes appear equally, because now the qubits are random <i>and independent</i>. Same randomness — completely different structure. That contrast is the whole idea.
     </div>
   </section>
 
