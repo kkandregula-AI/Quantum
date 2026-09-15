@@ -108,6 +108,9 @@ details.more .inner b{color:var(--ink)}
 .levelpick .lp .t{font-weight:700}
 .levelpick .lp .d{color:var(--muted); font-size:.88rem}
 .resume{max-width:520px;margin:16px auto 0;text-align:center;color:var(--muted);font-size:.9rem}
+.leveldesc{max-width:520px;margin:12px auto 0;padding:11px 15px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--muted);font-size:.9rem;line-height:1.5;text-align:center;transition:border-color .2s,background .2s}
+.leveldesc b{color:var(--ink)}
+.leveldesc.flash{border-color:var(--violet);background:linear-gradient(120deg,rgba(56,225,214,.08),rgba(169,139,255,.1))}
 .jbar{position:sticky; top:calc(56px + env(safe-area-inset-top)); z-index:20; background:linear-gradient(var(--void) 65%,transparent); padding:14px 0 10px}
 .jbar .row{display:flex; align-items:center; gap:12px}
 .jdots{display:flex; gap:6px; flex:1; flex-wrap:wrap}
@@ -344,6 +347,8 @@ details.more .inner b{color:var(--ink)}
           <li>What <b>superposition</b> and <b>entanglement</b> really mean</li>
           <li>Why quantum computers are <b>different</b> — not just faster</li>
           <li>Where they could help, and what the <b>future</b> might hold</li>
+          <li class="lvl-exp">The real vocabulary — <b>amplitudes</b>, <b>gates</b>, the <b>Bell state</b> — as it comes up</li>
+          <li class="lvl-tech">How <b>hardware</b>, <b>error correction</b> and the industry roadmap fit together</li>
         </ul>
       </div>
       <div class="levelpick" id="levelPick" role="group" aria-label="Choose your level">
@@ -351,6 +356,7 @@ details.more .inner b{color:var(--ink)}
         <button class="lp" data-lvl="explorer" aria-pressed="false"><span class="em">&#129517;</span><span><span class="t">Explorer</span><br><span class="d">Adds the real terms and a bit more depth as you go.</span></span></button>
         <button class="lp" data-lvl="technical" aria-pressed="false"><span class="em">&#9881;&#65039;</span><span><span class="t">Technical</span><br><span class="d">Everything on: gates, algorithms, hardware, error correction.</span></span></button>
       </div>
+      <div class="leveldesc" id="levelDesc"></div>
     </div>
   </div>
 </section>
@@ -615,9 +621,16 @@ function pctNote(p0,p1,g,measured){
   return 'Superposition \u2014 about <b>'+a+'%</b> chance of 0, <b>'+b+'%</b> chance of 1.';
 }
 let level = store.get('level','beginner');
+const LEVEL_DESC = {
+  beginner:'<b>Beginner is on.</b> Plain language only — technical terms and the deeper sections stay hidden.',
+  explorer:'<b>Explorer is on.</b> Real terms now appear inline, deeper "Learn more" notes unlock, and <b>Future</b> gains a detailed milestone timeline.',
+  technical:'<b>Technical is on.</b> Everything shows — amplitudes &amp; concurrence in <b>Try</b>, plus a "who\'s building quantum hardware" section in <b>Future</b>.'
+};
 function setLevel(l){ level=l; store.set('level',l); document.body.dataset.level=l;
   document.querySelectorAll('#levelCtl button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.lvl===l)));
   document.querySelectorAll('#levelPick .lp').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.lvl===l)));
+  const d=$('levelDesc');
+  if(d){ d.innerHTML=LEVEL_DESC[l]||''; d.classList.remove('flash'); void d.offsetWidth; d.classList.add('flash'); setTimeout(()=>d.classList.remove('flash'),700); }
 }
 const STEPS = [
   {key:'qubit', build:stepQubit},
