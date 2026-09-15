@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>QuantumX — Your Interactive Guide to the Quantum Era</title>
-<meta name="description" content="Learn quantum computing from zero. Play with a real qubit, build entangling circuits, and explore where quantum could go by 2040 and beyond." />
+<title>QuantumX — Quantum Computing, Made Simple</title>
+<meta name="description" content="Understand qubits, superposition and entanglement in about 10 minutes — then play with a real quantum computer simulator. Zero prior knowledge needed." />
 <meta name="theme-color" content="#070912" />
 <meta name="color-scheme" content="dark" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -15,19 +15,16 @@
 <link rel="apple-touch-icon" href="icon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --void:#070912; --panel:#0e1322; --panel2:#151d31; --raised:#1b2540;
   --line:rgba(126,164,224,.14); --line2:rgba(126,164,224,.28);
   --ink:#e9eefb; --muted:#8f9cbd; --dim:#5f6c8c;
-  --zero:#38e1d6;      /* |0> pole — cyan  */
-  --one:#ff5fa2;       /* |1> pole — magenta */
+  --zero:#38e1d6; --one:#ff5fa2;
   --amber:#ffb347; --violet:#a98bff;
   --good:#57e08b; --plaus:#ffcf5c; --dep:#ff9a52; --spec:#ff6b8a;
-  --r:16px; --r-sm:10px;
-  --shell:min(1120px,100%);
-  --tabh:64px;
+  --r:16px; --r-sm:10px; --shell:min(1080px,100%); --tabh:66px;
   font-synthesis:none;
 }
 *{box-sizing:border-box}
@@ -35,188 +32,180 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--void); color:var(--ink);
   font-family:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  font-size:16px; line-height:1.55; letter-spacing:.005em;
+  font-size:16px; line-height:1.58; letter-spacing:.005em;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-  overflow-x:hidden;
-  padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom));
+  overflow-x:hidden; padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 20px);
 }
-body::before{ /* cold cryostat field */
-  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+body::before{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
   background:
-    radial-gradient(70% 55% at 82% -8%, rgba(56,225,214,.10), transparent 60%),
-    radial-gradient(60% 55% at 12% 108%, rgba(255,95,162,.10), transparent 60%),
-    radial-gradient(90% 70% at 50% 40%, rgba(20,29,49,.5), transparent 70%);
-}
-h1,h2,h3,.disp{font-family:"Bricolage Grotesque",serif; font-weight:700; line-height:1.02; letter-spacing:-.02em; margin:0}
-.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
-a{color:inherit}
-button{font-family:inherit; cursor:pointer; color:inherit}
-:focus-visible{outline:2px solid var(--zero); outline-offset:3px; border-radius:8px}
-p{margin:.5em 0}
-.wrap{width:var(--shell); margin:0 auto; padding:0 20px}
-
-/* ---------- top brand bar ---------- */
+    radial-gradient(60% 45% at 82% -5%,rgba(56,225,214,.10),transparent 60%),
+    radial-gradient(55% 45% at 5% 8%,rgba(169,139,255,.10),transparent 60%),
+    radial-gradient(50% 40% at 50% 108%,rgba(255,95,162,.08),transparent 60%);}
+a{color:var(--zero)}
+b{font-weight:700}
+.mono{font-family:"IBM Plex Mono"}
+.wrap{width:var(--shell); margin-inline:auto; padding-inline:20px}
 .top{position:sticky; top:0; z-index:40; backdrop-filter:blur(14px);
   background:linear-gradient(var(--void),rgba(7,9,18,.72)); border-bottom:1px solid var(--line);
   padding-top:env(safe-area-inset-top,0px)}
-.top .wrap{display:flex; align-items:center; gap:14px; height:58px}
-.logo{display:flex; align-items:center; gap:10px; font-family:"Bricolage Grotesque"; font-weight:800; letter-spacing:-.03em; font-size:1.18rem}
-.logo .mark{width:26px;height:26px;flex:0 0 auto}
+.top .wrap{display:flex; align-items:center; gap:12px; height:56px}
+.logo{display:flex; align-items:center; gap:10px; font-family:"Bricolage Grotesque"; font-weight:800; letter-spacing:-.03em; font-size:1.14rem; cursor:pointer; background:none;border:0;color:var(--ink)}
+.logo .mark{width:25px;height:25px;flex:0 0 auto}
 .logo b{background:linear-gradient(92deg,var(--zero),var(--violet) 60%,var(--one)); -webkit-background-clip:text; background-clip:text; color:transparent}
 .top .spacer{flex:1}
-.persona-chip{font-size:.8rem; color:var(--muted); border:1px solid var(--line); background:var(--panel);
-  padding:6px 11px; border-radius:999px; display:inline-flex; gap:7px; align-items:center; white-space:nowrap}
-.persona-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--zero)}
-
-/* ---------- views ---------- */
+.levels{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; gap:2px}
+.levels button{border:0; background:none; color:var(--muted); font:inherit; font-size:.76rem; font-weight:600; padding:5px 11px; border-radius:999px; cursor:pointer; transition:.15s; white-space:nowrap}
+.levels button[aria-pressed="true"]{background:linear-gradient(120deg,rgba(56,225,214,.22),rgba(169,139,255,.2)); color:var(--ink)}
+.levels button:hover{color:var(--ink)}
+@media(max-width:520px){ .levels button{padding:5px 9px; font-size:.72rem} }
+main{padding-top:8px}
 .view{display:none; animation:fade .35s ease}
 .view.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
-section.block{padding:34px 0; border-top:1px solid var(--line)}
-section.block:first-of-type{border-top:0}
-.eyebrow{font-family:"IBM Plex Mono"; font-size:.72rem; letter-spacing:.12em; color:var(--zero); text-transform:uppercase}
-.kicker{color:var(--muted); max-width:62ch}
-h2.big{font-size:clamp(1.55rem,4.4vw,2.35rem); margin:.15em 0 .35em}
-h3{font-size:1.12rem; letter-spacing:-.01em}
-
-/* ---------- hero ---------- */
-.hero{position:relative; padding:26px 0 8px}
-.hero-grid{display:grid; grid-template-columns:1fr; gap:26px; align-items:center}
-@media(min-width:860px){.hero-grid{grid-template-columns:1.05fr .95fr; gap:40px}}
-.hero h1{font-size:clamp(2.4rem,8vw,4.3rem); font-weight:800}
-.hero h1 .grad{background:linear-gradient(96deg,var(--zero),var(--violet) 55%,var(--one)); -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p.lead{font-size:clamp(1.02rem,2.4vw,1.2rem); color:var(--muted); max-width:44ch; margin-top:14px}
-.hero .cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:22px}
-.btn{border:1px solid var(--line2); background:var(--panel); padding:12px 18px; border-radius:12px; font-weight:600; font-size:.96rem; transition:transform .12s ease, border-color .2s, background .2s; display:inline-flex; align-items:center; gap:9px}
-.btn:hover{transform:translateY(-1px); border-color:var(--zero)}
-.btn.primary{background:linear-gradient(100deg,rgba(56,225,214,.18),rgba(169,139,255,.16)); border-color:var(--line2)}
-.btn.primary:hover{border-color:var(--violet)}
-.readiness-mini{margin-top:26px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
-.rail{height:10px; flex:1; min-width:160px; background:var(--panel2); border-radius:999px; overflow:hidden; border:1px solid var(--line)}
-.rail>span{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--zero),var(--violet),var(--one)); transition:width 1s cubic-bezier(.2,.8,.2,1)}
-
-/* bloch stage */
-.stage{position:relative; border:1px solid var(--line); border-radius:22px; background:
-   radial-gradient(120% 100% at 50% 0%, rgba(27,37,64,.7), rgba(14,19,34,.9)); padding:14px; overflow:hidden}
-.stage canvas{width:100%; height:auto; display:block; touch-action:none}
-.stage .hint{position:absolute; left:16px; bottom:12px; font-size:.72rem; color:var(--dim); font-family:"IBM Plex Mono"}
-.readout{display:flex; gap:10px; margin-top:12px}
-.pcard{flex:1; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 12px}
-.pcard .lab{font-size:.72rem; color:var(--muted); font-family:"IBM Plex Mono"}
-.pcard .val{font-family:"Bricolage Grotesque"; font-weight:700; font-size:1.5rem; line-height:1}
+.block{padding:26px 0; border-top:1px solid var(--line)}
+.block:first-child{border-top:0}
+.eyebrow{font-family:"IBM Plex Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--zero); margin-bottom:10px}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque"; font-weight:800; letter-spacing:-.02em; line-height:1.12; margin:0}
+h2.big{font-size:clamp(1.5rem,4.4vw,2.2rem); margin:.1em 0 .35em}
+h3{font-size:1.2rem}
+.kicker{color:var(--muted); max-width:60ch; font-size:1.02rem}
+.grad{background:linear-gradient(96deg,var(--zero),var(--violet) 55%,var(--one)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.btn{display:inline-flex;align-items:center;gap:8px; border:1px solid var(--line2); background:var(--panel); color:var(--ink); font:inherit; font-weight:600; padding:11px 17px; border-radius:12px; cursor:pointer; transition:.15s; font-size:.92rem}
+.btn:hover{border-color:var(--zero); transform:translateY(-1px)}
+.btn.primary{border:0; background:linear-gradient(120deg,var(--zero),var(--violet)); color:#05121f; font-weight:700}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.big{padding:14px 22px; font-size:1rem; border-radius:14px}
+.btn.ghost{background:transparent}
+.card{border:1px solid var(--line); border-radius:var(--r); background:var(--panel); padding:18px}
+.grid{display:grid; gap:14px}
+@media(min-width:640px){.grid.c2{grid-template-columns:1fr 1fr} .grid.c3{grid-template-columns:1fr 1fr 1fr}}
+[data-level="beginner"] .lvl-exp,[data-level="beginner"] .lvl-tech{display:none!important}
+[data-level="explorer"] .lvl-tech{display:none!important}
+.lvl-tag{display:inline-block; font-family:"IBM Plex Mono"; font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--violet); border:1px solid rgba(169,139,255,.4); border-radius:6px; padding:2px 7px; margin-bottom:10px}
+details.more{margin-top:12px; border:1px solid var(--line); border-radius:12px; background:var(--panel2); overflow:hidden}
+details.more>summary{cursor:pointer; list-style:none; padding:11px 14px; font-weight:600; font-size:.9rem; color:var(--zero); display:flex; align-items:center; gap:8px}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"+"; font-family:"IBM Plex Mono"; color:var(--zero)}
+details.more[open]>summary::before{content:"\2013"}
+details.more .inner{padding:0 14px 14px; color:var(--muted); font-size:.94rem}
+details.more .inner b{color:var(--ink)}
+.home-hero{padding:34px 0 8px; text-align:center}
+.home-hero .eyebrow{color:var(--muted)}
+.home-hero h1{font-size:clamp(2.1rem,7vw,3.4rem)}
+.home-hero p.lead{font-size:clamp(1.02rem,2.4vw,1.18rem); color:var(--muted); max-width:36ch; margin:16px auto 0}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:24px}
+.mini-orb{width:132px;height:132px;margin:6px auto 0;position:relative}
+.mini-orb canvas{width:100%;height:100%}
+.willknow{max-width:520px; margin:26px auto 0; text-align:left; border:1px solid var(--line); border-radius:16px; background:var(--panel); padding:18px 20px}
+.willknow .l{font-family:"IBM Plex Mono"; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--zero); margin-bottom:10px}
+.willknow ul{margin:0; padding-left:18px; color:var(--muted)}
+.willknow li{margin:6px 0} .willknow li b{color:var(--ink)}
+.levelpick{max-width:520px;margin:22px auto 0; display:grid; gap:10px}
+.levelpick .lp{display:flex; gap:12px; align-items:flex-start; text-align:left; border:1px solid var(--line); background:var(--panel); border-radius:14px; padding:13px 15px; cursor:pointer; transition:.15s; color:var(--ink); font:inherit; width:100%}
+.levelpick .lp:hover{border-color:var(--zero)}
+.levelpick .lp[aria-pressed="true"]{border-color:var(--violet); background:linear-gradient(120deg,rgba(56,225,214,.08),rgba(169,139,255,.08))}
+.levelpick .lp .em{font-size:1.3rem;line-height:1}
+.levelpick .lp .t{font-weight:700}
+.levelpick .lp .d{color:var(--muted); font-size:.88rem}
+.resume{max-width:520px;margin:16px auto 0;text-align:center;color:var(--muted);font-size:.9rem}
+.jbar{position:sticky; top:calc(56px + env(safe-area-inset-top)); z-index:20; background:linear-gradient(var(--void) 65%,transparent); padding:14px 0 10px}
+.jbar .row{display:flex; align-items:center; gap:12px}
+.jdots{display:flex; gap:6px; flex:1; flex-wrap:wrap}
+.jdots i{height:6px; flex:1; min-width:14px; border-radius:99px; background:var(--line2); transition:.3s}
+.jdots i.done{background:var(--zero)}
+.jdots i.now{background:linear-gradient(90deg,var(--zero),var(--violet))}
+.jstep-label{font-family:"IBM Plex Mono"; font-size:.74rem; color:var(--muted); white-space:nowrap}
+.jstep{display:none}
+.jstep.active{display:block; animation:fade .3s ease}
+.jstep .eyebrow{color:var(--violet)}
+.jstep h2{font-size:clamp(1.5rem,5vw,2.1rem); margin-bottom:12px}
+.jsimple{font-size:1.12rem; line-height:1.6; color:var(--ink); max-width:52ch}
+.jsimple .hl{color:var(--zero); font-weight:700}
+.analogy{margin-top:16px; border-left:3px solid var(--violet); padding:8px 0 8px 15px; color:var(--muted); font-size:1.02rem}
+.analogy b{color:var(--ink)}
+.jnav{display:flex; justify-content:space-between; gap:12px; margin-top:26px; padding-top:18px; border-top:1px solid var(--line)}
+.tryinline{margin-top:18px; border:1px solid var(--line); border-radius:18px; background:radial-gradient(120% 100% at 50% 0,rgba(27,37,64,.5),var(--panel)); padding:18px}
+.tryinline .cap{font-family:"IBM Plex Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:12px}
+.stage{position:relative; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:radial-gradient(120% 100% at 50% 0,rgba(27,37,64,.5),var(--panel)); touch-action:pan-y}
+.stage canvas{display:block;width:100%}
+.stage .hint{position:absolute; left:12px; bottom:10px; font-size:.72rem; color:var(--dim); font-family:"IBM Plex Mono"}
+.readout{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+.pcard{border:1px solid var(--line); border-radius:12px; background:var(--panel); padding:11px 13px}
+.pcard .lab{font-size:.76rem; color:var(--muted); font-family:"IBM Plex Mono"}
+.pcard .val{font-size:1.5rem; font-weight:800; font-family:"Bricolage Grotesque"; margin:2px 0 7px}
 .pcard.z .val{color:var(--zero)} .pcard.o .val{color:var(--one)}
-.pbar{height:6px; margin-top:8px; border-radius:999px; background:var(--panel2); overflow:hidden}
-.pbar>span{display:block;height:100%;transition:width .5s ease}
-.pcard.z .pbar>span{background:var(--zero)} .pcard.o .pbar>span{background:var(--one)}
+.pbar{height:7px;border-radius:99px;background:var(--panel2);overflow:hidden}
+.pbar span{display:block;height:100%;transition:width .4s ease}
+.pcard.z .pbar span{background:var(--zero)} .pcard.o .pbar span{background:var(--one)}
 .gaterow{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
-.gbtn{border:1px solid var(--line2); background:var(--panel); border-radius:10px; min-width:46px; height:44px; padding:0 12px; font-family:"IBM Plex Mono"; font-weight:600; display:inline-flex;align-items:center;justify-content:center; gap:6px; transition:.15s}
-.gbtn:hover{border-color:var(--zero); background:var(--panel2)}
-.gbtn small{font-family:"Hanken Grotesk"; color:var(--muted); font-weight:500; font-size:.72rem}
-.state-note{margin-top:12px; font-size:.92rem; color:var(--muted); min-height:2.6em}
-.state-note b{color:var(--ink); font-weight:600}
-
-/* card grids */
-.cards{display:grid; grid-template-columns:1fr; gap:14px; margin-top:20px}
-@media(min-width:640px){.cards.c2{grid-template-columns:1fr 1fr} .cards.c3{grid-template-columns:1fr 1fr 1fr}}
-.card{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px; transition:border-color .2s, transform .15s}
-.card.tap{cursor:pointer} .card.tap:hover{border-color:var(--line2); transform:translateY(-2px)}
-.card .ic{font-size:1.5rem; line-height:1}
-.card h3{margin:.5em 0 .2em}
-.card p{color:var(--muted); font-size:.92rem; margin:0}
-.big-cards{display:grid; grid-template-columns:1fr; gap:14px; margin-top:22px}
-@media(min-width:720px){.big-cards{grid-template-columns:1fr 1fr 1fr}}
-.bcard{position:relative; border:1px solid var(--line); border-radius:20px; padding:22px 20px 20px; overflow:hidden; background:var(--panel); text-align:left}
-.bcard::after{content:""; position:absolute; inset:0; opacity:.5; pointer-events:none}
-.bcard.u::after{background:radial-gradient(90% 70% at 100% 0,rgba(56,225,214,.16),transparent 60%)}
-.bcard.e::after{background:radial-gradient(90% 70% at 100% 0,rgba(169,139,255,.16),transparent 60%)}
-.bcard.x::after{background:radial-gradient(90% 70% at 100% 0,rgba(255,95,162,.16),transparent 60%)}
-.bcard .ic{font-size:1.8rem}
-.bcard h3{font-size:1.28rem; margin:.4em 0 .25em}
-.bcard p{color:var(--muted); font-size:.92rem; margin:0 0 14px}
-.bcard .go{font-family:"IBM Plex Mono"; font-size:.8rem; color:var(--zero)}
-
-/* persona picker */
-.chips{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px}
-.chip{border:1px solid var(--line2); background:var(--panel); border-radius:999px; padding:9px 15px; font-size:.9rem; font-weight:500; transition:.15s}
-.chip[aria-pressed="true"]{background:linear-gradient(100deg,rgba(56,225,214,.22),rgba(169,139,255,.18)); border-color:var(--violet); color:#fff}
-.chip:hover{border-color:var(--zero)}
-
-/* comparison table */
-.cmp{width:100%; border-collapse:collapse; margin-top:18px; border:1px solid var(--line); border-radius:14px; overflow:hidden; font-size:.94rem}
-.cmp th,.cmp td{padding:12px 14px; text-align:left; border-bottom:1px solid var(--line)}
-.cmp thead th{font-family:"IBM Plex Mono"; font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); background:var(--panel)}
-.cmp thead th.q{color:var(--zero)}
-.cmp tr:last-child td{border-bottom:0}
+.gbtn{display:flex;flex-direction:column;align-items:center;gap:2px; min-width:58px; padding:9px 11px; border:1px solid var(--line2); background:var(--panel); color:var(--ink); border-radius:11px; cursor:pointer; font-family:"IBM Plex Mono"; font-weight:600; font-size:1rem; transition:.12s}
+.gbtn small{font-family:"Hanken Grotesk"; font-weight:500; font-size:.66rem; color:var(--muted)}
+.gbtn:hover{border-color:var(--zero); transform:translateY(-1px)}
+.state-note{margin-top:12px; font-size:.96rem; color:var(--muted); min-height:2.5em; border:1px solid var(--line); border-radius:12px; padding:11px 14px; background:var(--panel)}
+.state-note b{color:var(--ink)} .state-note b.mono{font-family:"IBM Plex Mono"; color:var(--zero)}
+.tally{display:flex; gap:14px; margin-top:14px}
+.tcard{flex:1; border:1px solid var(--line); border-radius:14px; background:var(--panel); padding:14px; text-align:center}
+.tcard .n{font-size:2rem; font-weight:800; font-family:"Bricolage Grotesque"}
+.tcard.z .n{color:var(--zero)} .tcard.o .n{color:var(--one)}
+.tcard .k{font-family:"IBM Plex Mono"; color:var(--muted); font-size:.8rem}
+.mini-shots{display:flex; align-items:flex-end; gap:10px; height:130px; margin-top:14px; padding:0 6px}
+.mini-shots .col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px}
+.mini-shots .bar{width:100%; border-radius:7px 7px 0 0; min-height:3px; transition:height .5s ease}
+.mini-shots .k{font-family:"IBM Plex Mono"; font-size:.78rem; color:var(--muted)}
+.mini-shots .cnt{font-family:"IBM Plex Mono"; font-size:.74rem; color:var(--muted)}
+.punch{margin-top:14px; padding:14px 16px; border-radius:14px; font-size:1rem; line-height:1.55; border:1px solid rgba(169,139,255,.42); background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(56,225,214,.05))}
+.punch .hl{color:var(--violet); font-weight:700} .punch code{font-family:"IBM Plex Mono"; color:var(--ink)}
+.cmp{width:100%; border-collapse:separate; border-spacing:0; margin-top:16px; font-size:.96rem}
+.cmp th,.cmp td{padding:11px 13px; text-align:left; border-bottom:1px solid var(--line)}
+.cmp thead th{font-family:"IBM Plex Mono"; font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.cmp thead th:nth-child(3){color:var(--zero)}
 .cmp td:first-child{color:var(--muted)}
-.cmp td.qv{color:var(--ink); font-weight:500}
-
-/* myth reality */
-.mr{display:grid; grid-template-columns:1fr; gap:12px; margin-top:18px}
-@media(min-width:760px){.mr{grid-template-columns:1fr 1fr}}
-.mr-item{border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--panel)}
-.mr-item .m{padding:13px 15px; border-bottom:1px solid var(--line); display:flex; gap:9px; align-items:flex-start}
-.mr-item .r{padding:13px 15px; display:flex; gap:9px; align-items:flex-start; background:rgba(87,224,139,.05)}
-.mr-item .tag{font-family:"IBM Plex Mono"; font-size:.7rem; letter-spacing:.06em; padding:2px 7px; border-radius:6px; flex:0 0 auto; margin-top:2px}
-.mr-item .m .tag{color:var(--spec); border:1px solid rgba(255,107,138,.4)}
-.mr-item .r .tag{color:var(--good); border:1px solid rgba(87,224,139,.4)}
-.mr-item p{margin:0; font-size:.9rem}
-.mr-item .m p{color:var(--ink)} .mr-item .r p{color:var(--muted)}
-
-/* algorithms */
-.algo{border:1px solid var(--line); border-radius:16px; background:var(--panel); padding:18px; margin-top:14px}
-.algo .row{display:flex; align-items:center; gap:12px; margin:10px 0}
-.algo .row .name{width:96px; font-size:.82rem; color:var(--muted); flex:0 0 auto}
-.algo .track{flex:1; height:20px; background:var(--panel2); border-radius:6px; overflow:hidden; position:relative; border:1px solid var(--line)}
-.algo .track>span{position:absolute; left:0; top:0; bottom:0; border-radius:6px; transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
-.algo .track.c>span{background:linear-gradient(90deg,#6d7aa0,#404c6e)}
-.algo .track.q>span{background:linear-gradient(90deg,var(--zero),var(--violet))}
-.algo .caption{font-size:.85rem; color:var(--muted); margin-top:6px}
-
-/* stack */
-.stack{display:flex; flex-direction:column; gap:6px; margin-top:16px}
-.layer{border:1px solid var(--line); border-radius:12px; background:var(--panel); padding:0; overflow:hidden; transition:border-color .2s}
-.layer summary{list-style:none; padding:13px 16px; display:flex; align-items:center; gap:12px; cursor:pointer}
-.layer summary::-webkit-details-marker{display:none}
-.layer summary .n{font-family:"IBM Plex Mono"; font-size:.72rem; color:var(--dim); width:22px}
-.layer summary .t{font-weight:600}
-.layer summary .plus{margin-left:auto; color:var(--muted); transition:transform .2s}
-.layer[open] summary .plus{transform:rotate(45deg)}
-.layer .body{padding:0 16px 15px 50px; color:var(--muted); font-size:.9rem}
-.layer[open]{border-color:var(--line2)}
-
-/* ---------- LAB circuit ---------- */
-.circuit{border:1px solid var(--line); border-radius:18px; background:
-  radial-gradient(120% 100% at 50% 0,rgba(27,37,64,.55),var(--panel)); padding:16px; margin-top:16px}
-.palette{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center}
+.cmp td.q{color:var(--ink); font-weight:600}
+.takeaway{margin-top:16px; border:1px solid rgba(255,179,71,.4); background:rgba(255,179,71,.08); border-radius:14px; padding:14px 16px; color:var(--ink)}
+.takeaway b{color:var(--amber)}
+.circuit{border:1px solid var(--line); border-radius:18px; background:radial-gradient(120% 100% at 50% 0,rgba(27,37,64,.55),var(--panel)); padding:16px; margin-top:16px}
+.palette{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; align-items:center}
 .palette .pl{font-size:.74rem; color:var(--muted); font-family:"IBM Plex Mono"; margin-right:2px}
-.pgate{width:46px;height:46px; border-radius:10px; border:1px solid var(--line2); background:var(--panel); font-family:"IBM Plex Mono"; font-weight:600; font-size:1rem; display:inline-flex;align-items:center;justify-content:center; transition:.12s}
+.pgate{width:46px;height:46px; border-radius:10px; border:1px solid var(--line2); background:var(--panel); font-family:"IBM Plex Mono"; font-weight:600; font-size:1rem; display:inline-flex;align-items:center;justify-content:center; cursor:pointer; transition:.12s}
 .pgate:hover{border-color:var(--zero)}
 .pgate[aria-pressed="true"]{background:linear-gradient(120deg,rgba(56,225,214,.25),rgba(169,139,255,.2)); border-color:var(--violet); box-shadow:0 0 0 1px var(--violet) inset}
 .pgate.wide{width:auto; padding:0 12px; font-family:"Hanken Grotesk"; font-weight:600; font-size:.86rem}
 .wires{display:flex; flex-direction:column; gap:14px; margin:6px 0 4px}
-.wire{display:flex; align-items:center; gap:0}
+.wire{display:flex; align-items:center}
 .wire .lbl{width:40px; flex:0 0 auto; font-family:"IBM Plex Mono"; font-size:.85rem; color:var(--muted)}
 .slots{position:relative; flex:1; display:flex; align-items:center; height:52px}
 .slots::before{content:""; position:absolute; left:0; right:60px; top:50%; height:2px; background:var(--line2)}
 .slot{position:relative; z-index:1; flex:1; height:52px; display:flex; align-items:center; justify-content:center}
-.slot button{width:42px;height:42px;border-radius:9px; border:1px dashed var(--line2); background:rgba(14,19,34,.6); color:var(--dim); font-family:"IBM Plex Mono"; font-weight:600; font-size:.95rem; transition:.12s}
+.slot button{width:42px;height:42px;border-radius:9px; border:1px dashed var(--line2); background:rgba(14,19,34,.6); color:var(--dim); font-family:"IBM Plex Mono"; font-weight:600; font-size:.95rem; cursor:pointer; transition:.12s}
 .slot button:hover{border-style:solid; border-color:var(--zero); color:var(--ink)}
 .slot button.filled{border-style:solid; background:var(--raised); color:var(--ink); border-color:var(--line2)}
 .slot button.ctrl{background:var(--zero); color:#04201e; border-color:var(--zero)}
 .slot button.targ{background:transparent; color:var(--one); border-color:var(--one); font-size:1.2rem}
 .slot .vlink{position:absolute; left:50%; transform:translateX(-50%); width:2px; background:var(--one); z-index:0}
 .measure-cell{width:58px; flex:0 0 auto; display:flex; align-items:center; justify-content:center}
-.mbtn{width:46px;height:44px;border-radius:9px;border:1px solid var(--line2); background:var(--panel); color:var(--muted); font-size:.7rem; font-family:"IBM Plex Mono"; line-height:1; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px; transition:.12s}
+.mbtn{width:46px;height:44px;border-radius:9px;border:1px solid var(--line2); background:var(--panel); color:var(--muted); font-size:.7rem; font-family:"IBM Plex Mono"; line-height:1; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px; cursor:pointer; transition:.12s}
 .mbtn[aria-pressed="true"]{background:linear-gradient(120deg,rgba(56,225,214,.2),rgba(255,95,162,.15)); border-color:var(--zero); color:var(--ink)}
 .circ-actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
 .circ-actions .btn{padding:9px 13px; font-size:.85rem}
 .selnote{font-size:.8rem; color:var(--zero); font-family:"IBM Plex Mono"; min-height:1.4em; margin-top:4px}
-
+.labguide{border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,rgba(27,37,64,.35),var(--panel)); padding:16px 16px 6px; margin-top:16px}
+.lg-steps{display:grid; grid-template-columns:1fr; gap:12px}
+@media(min-width:720px){.lg-steps{grid-template-columns:repeat(3,1fr)}}
+.lg-step{display:flex; gap:11px; align-items:flex-start; font-size:.92rem; line-height:1.5; color:var(--muted)}
+.lg-step b{color:var(--ink)}
+.lg-n{flex:0 0 auto; width:26px;height:26px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-family:"IBM Plex Mono"; font-weight:700; font-size:.85rem; color:var(--void); background:linear-gradient(135deg,var(--zero),var(--violet))}
+.lg-legend{display:flex; flex-wrap:wrap; gap:8px 16px; margin:14px 0 10px; padding-top:12px; border-top:1px solid var(--line)}
+.lg-tag{display:inline-flex; align-items:center; gap:7px; font-size:.82rem; color:var(--muted)}
+.lg-tag b{color:var(--ink)}
+.lg-tag code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink); background:var(--panel2); border:1px solid var(--line); padding:1px 6px; border-radius:6px}
+.lg-tag .sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto}
+.lg-tag .sw.z{background:var(--zero)} .lg-tag .sw.o{background:var(--one)}
 .qout{display:grid; grid-template-columns:1fr; gap:14px; margin-top:16px}
 @media(min-width:760px){.qout{grid-template-columns:1fr 1fr}}
 .qpanel{border:1px solid var(--line); border-radius:14px; background:var(--panel); padding:14px}
-.qpanel h4{margin:0 0 10px; font-size:.8rem; font-family:"IBM Plex Mono"; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.qpanel h4{margin:0 0 8px; font-size:.8rem; font-family:"IBM Plex Mono"; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.qsub{font-size:.86rem; line-height:1.5; color:var(--muted); margin:0 0 12px}
+.qsub code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink)} .qsub b{color:var(--ink)}
 .amp{display:flex; align-items:center; gap:10px; margin:7px 0; font-family:"IBM Plex Mono"; font-size:.86rem}
 .amp .ket{width:52px; color:var(--muted)}
 .amp .abar{flex:1; height:14px; background:var(--panel2); border-radius:5px; overflow:hidden; border:1px solid var(--line)}
@@ -230,165 +219,89 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
 .shots .col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px}
 .shots .bar{width:100%; border-radius:6px 6px 0 0; min-height:2px; transition:height .5s ease}
 .shots .k{font-family:"IBM Plex Mono"; font-size:.72rem; color:var(--muted)}
-
-/* ---------- LAB explainer helpers ---------- */
-.labguide{border:1px solid var(--line); border-radius:16px; background:
-  linear-gradient(180deg,rgba(27,37,64,.35),var(--panel)); padding:16px 16px 6px; margin-top:16px}
-.lg-steps{display:grid; grid-template-columns:1fr; gap:12px}
-@media(min-width:720px){.lg-steps{grid-template-columns:repeat(3,1fr)}}
-.lg-step{display:flex; gap:11px; align-items:flex-start; font-size:.92rem; line-height:1.5; color:var(--muted)}
-.lg-step b{color:var(--ink)}
-.lg-n{flex:0 0 auto; width:26px;height:26px;border-radius:50%; display:flex;align-items:center;justify-content:center;
-  font-family:"IBM Plex Mono"; font-weight:700; font-size:.85rem; color:var(--void);
-  background:linear-gradient(135deg,var(--zero),var(--violet))}
-.lg-legend{display:flex; flex-wrap:wrap; gap:8px 16px; margin:14px 0 10px; padding-top:12px; border-top:1px solid var(--line)}
-.lg-tag{display:inline-flex; align-items:center; gap:7px; font-size:.82rem; color:var(--muted)}
-.lg-tag b{color:var(--ink)}
-.lg-tag code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink); background:var(--panel2); border:1px solid var(--line); padding:1px 6px; border-radius:6px}
-.lg-tag .sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto}
-.lg-tag .sw.z{background:var(--zero)} .lg-tag .sw.o{background:var(--one)}
-.qsub{font-size:.86rem; line-height:1.5; color:var(--muted); margin:-4px 0 12px}
-.qsub code{font-family:"IBM Plex Mono"; font-size:.82rem; color:var(--ink)}
-.qsub b{color:var(--ink)}
-.lookfor{margin-top:16px; padding:15px 17px; border-radius:14px; font-size:.94rem; line-height:1.6; color:var(--ink);
-  border:1px solid rgba(169,139,255,.42); background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(56,225,214,.05))}
-.lookfor code{font-family:"IBM Plex Mono"; color:var(--ink)}
-.lookfor .hl{color:var(--violet); font-weight:700}
-
-/* solve cards */
-.solve{border:1px solid var(--line); border-radius:14px; background:var(--panel); margin-top:12px; overflow:hidden}
-.solve summary{list-style:none; padding:15px 16px; cursor:pointer; display:flex; gap:12px; align-items:center}
+.lookfor{margin-top:16px; padding:15px 17px; border-radius:14px; font-size:.94rem; line-height:1.6; color:var(--ink); border:1px solid rgba(169,139,255,.42); background:linear-gradient(180deg,rgba(169,139,255,.1),rgba(56,225,214,.05))}
+.lookfor code{font-family:"IBM Plex Mono"; color:var(--ink)} .lookfor .hl{color:var(--violet); font-weight:700}
+.why-card{border:1px solid var(--line); border-radius:16px; background:var(--panel); padding:18px}
+.why-card .ic{font-size:1.6rem} .why-card h3{margin:8px 0 6px; font-size:1.1rem}
+.why-card p{margin:0; color:var(--muted); font-size:.95rem}
+.solve{border:1px solid var(--line); border-radius:14px; background:var(--panel); margin:10px 0; overflow:hidden}
+.solve summary{cursor:pointer; list-style:none; padding:15px 16px; display:flex; align-items:center; gap:12px; font-weight:600}
 .solve summary::-webkit-details-marker{display:none}
-.solve summary .q{font-weight:600; flex:1}
-.verdict{font-family:"IBM Plex Mono"; font-size:.68rem; padding:4px 9px; border-radius:999px; white-space:nowrap}
-.verdict.good{color:var(--good); border:1px solid rgba(87,224,139,.4)}
-.verdict.emerg{color:var(--amber); border:1px solid rgba(255,179,71,.4)}
-.verdict.no{color:var(--spec); border:1px solid rgba(255,107,138,.4)}
-.solve .body{padding:0 16px 16px; color:var(--muted); font-size:.92rem}
-.solve .body .step{margin:8px 0; padding-left:14px; border-left:2px solid var(--line2)}
-.solve .body .step b{color:var(--ink); font-weight:600}
-
-/* ---------- FUTURE timeline ---------- */
-.tl-scroll{display:flex; gap:14px; overflow-x:auto; padding:8px 2px 18px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch}
-.tl-scroll::-webkit-scrollbar{height:8px} .tl-scroll::-webkit-scrollbar-thumb{background:var(--line2); border-radius:99px}
-.tnode{scroll-snap-align:start; flex:0 0 78%; max-width:320px; border:1px solid var(--line); border-radius:16px; background:var(--panel); padding:16px; position:relative}
-@media(min-width:720px){.tnode{flex-basis:300px}}
-.tnode .yr{font-family:"Bricolage Grotesque"; font-weight:800; font-size:1.9rem}
-.tnode h4{margin:.2em 0 .4em; font-size:1.02rem}
-.tnode p{font-size:.86rem; color:var(--muted); margin:0}
-.conf{display:inline-flex; align-items:center; gap:6px; font-family:"IBM Plex Mono"; font-size:.68rem; padding:4px 9px; border-radius:999px; margin-top:12px}
-.conf .d{width:8px;height:8px;border-radius:50%}
-.conf.good{color:var(--good);border:1px solid rgba(87,224,139,.35)} .conf.good .d{background:var(--good)}
-.conf.plaus{color:var(--plaus);border:1px solid rgba(255,207,92,.35)} .conf.plaus .d{background:var(--plaus)}
-.conf.dep{color:var(--dep);border:1px solid rgba(255,154,82,.35)} .conf.dep .d{background:var(--dep)}
-.conf.spec{color:var(--spec);border:1px solid rgba(255,107,138,.35)} .conf.spec .d{background:var(--spec)}
-.legend{display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; font-size:.78rem; color:var(--muted)}
-.legend span{display:inline-flex; align-items:center; gap:6px}
-.legend .d{width:9px;height:9px;border-radius:50%}
-
-/* evolution */
-.evo{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:16px}
-.evo .step{border:1px solid var(--line); background:var(--panel); border-radius:10px; padding:9px 13px; font-size:.85rem}
-.evo .arr{color:var(--dim)}
-
-/* who is building */
-.builders{display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px}
-@media(min-width:640px){.builders{grid-template-columns:1fr 1fr}}
-@media(min-width:900px){.builders{grid-template-columns:1fr 1fr 1fr}}
-.builder{border:1px solid var(--line); border-radius:14px; background:var(--panel); padding:15px}
-.builder .nm{display:flex; align-items:baseline; gap:8px; justify-content:space-between}
-.builder .nm b{font-family:"Bricolage Grotesque"; font-size:1.05rem}
-.builder .app{font-family:"IBM Plex Mono"; font-size:.68rem; color:var(--zero); border:1px solid var(--line2); padding:2px 7px; border-radius:6px; white-space:nowrap}
-.builder p{font-size:.84rem; color:var(--muted); margin:8px 0 0}
-.builder .ms{font-size:.8rem; margin-top:8px; color:var(--ink)}
-.builder .ms span{color:var(--dim)}
-
-/* simulator */
-.sim{border:1px solid var(--line2); border-radius:18px; background:
-  radial-gradient(130% 100% at 0 0,rgba(169,139,255,.12),var(--panel)); padding:18px; margin-top:16px}
-.selrow{display:flex; flex-wrap:wrap; gap:16px; margin-bottom:14px}
-.selgrp{flex:1; min-width:220px}
-.selgrp .pl{font-size:.74rem; color:var(--muted); font-family:"IBM Plex Mono"; margin-bottom:7px}
-.opts{display:flex; flex-wrap:wrap; gap:7px}
-.opt{border:1px solid var(--line2); background:var(--panel); border-radius:9px; padding:8px 12px; font-size:.85rem; transition:.12s}
-.opt[aria-pressed="true"]{background:linear-gradient(120deg,rgba(56,225,214,.2),rgba(169,139,255,.18)); border-color:var(--violet); color:#fff}
-.opt:hover{border-color:var(--zero)}
-.scenario{border-top:1px solid var(--line); margin-top:6px; padding-top:16px}
-.scenario .head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
-.scenario .head h3{font-size:1.25rem}
-.scenario .meta{display:flex; gap:10px; margin:12px 0}
-.scenario .meta .m{flex:1; border:1px solid var(--line); border-radius:10px; padding:9px 11px; background:var(--panel)}
-.scenario .meta .m .l{font-size:.68rem; color:var(--muted); font-family:"IBM Plex Mono"}
-.scenario .meta .m .v{font-weight:600; margin-top:2px}
-.scenario .must{margin-top:8px}
-.scenario .must .l{font-size:.74rem; color:var(--muted); font-family:"IBM Plex Mono"; margin-bottom:6px}
-.scenario .must ul{margin:0; padding-left:18px; color:var(--muted); font-size:.88rem}
-
-/* ---------- PROGRESS quiz ---------- */
-.quiz{border:1px solid var(--line); border-radius:18px; background:var(--panel); padding:18px; margin-top:16px}
-.qprog{height:6px; background:var(--panel2); border-radius:99px; overflow:hidden; margin-bottom:16px}
-.qprog>span{display:block;height:100%; background:linear-gradient(90deg,var(--zero),var(--violet)); transition:width .3s}
-.qq{font-size:1.1rem; font-weight:600; margin-bottom:14px; font-family:"Bricolage Grotesque"; letter-spacing:-.01em}
-.qopts{display:flex; flex-direction:column; gap:9px}
-.qopt{text-align:left; border:1px solid var(--line2); background:var(--panel2); border-radius:11px; padding:13px 15px; font-size:.94rem; transition:.12s}
-.qopt:hover{border-color:var(--zero); transform:translateX(2px)}
-.qnav{display:flex; justify-content:space-between; margin-top:14px; font-size:.85rem; color:var(--muted)}
-.result{text-align:center; padding:8px 0}
-.score{font-family:"Bricolage Grotesque"; font-weight:800; font-size:4rem; line-height:1; background:linear-gradient(96deg,var(--zero),var(--violet),var(--one)); -webkit-background-clip:text;background-clip:text;color:transparent}
-.band{font-family:"IBM Plex Mono"; font-size:1rem; margin-top:6px}
-.pathbox{border:1px solid var(--line2); border-radius:14px; padding:16px; margin-top:18px; text-align:left; background:var(--panel2)}
-.pathbox .l{font-size:.74rem; color:var(--muted); font-family:"IBM Plex Mono"}
-.pathflow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-.pathflow .s{border:1px solid var(--line2); border-radius:8px; padding:7px 11px; font-size:.82rem; background:var(--panel)}
-.pathflow .arr{color:var(--dim); align-self:center}
-
-.explored{display:flex; align-items:center; gap:12px; margin-top:20px; flex-wrap:wrap}
-
-/* footer / sources */
-.sources{font-size:.82rem}
-.sources ol{padding-left:20px; color:var(--muted)}
-.sources li{margin:7px 0}
-.sources a{color:var(--zero); text-decoration:none; border-bottom:1px solid var(--line2)}
-.foot{border-top:1px solid var(--line); margin-top:20px; padding:26px 0 14px; color:var(--dim); font-size:.82rem; text-align:center}
-.foot .sig{color:var(--muted); font-family:"IBM Plex Mono"; font-size:.8rem}
-.foot .sig b{color:var(--ink); font-weight:600}
-.disclaimer{font-size:.78rem; color:var(--dim); border:1px dashed var(--line2); border-radius:12px; padding:12px 14px; margin-top:14px}
-
-/* ---------- bottom nav ---------- */
-.tabs{position:fixed; left:0; right:0; bottom:0; z-index:50; height:calc(var(--tabh) + env(safe-area-inset-bottom));
-  padding-bottom:env(safe-area-inset-bottom); background:linear-gradient(rgba(7,9,18,.6),var(--void) 40%); backdrop-filter:blur(16px); border-top:1px solid var(--line);
-  display:flex; justify-content:space-around; align-items:stretch}
-.tab{flex:1; background:none; border:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:var(--dim); font-size:.66rem; font-family:"IBM Plex Mono"; letter-spacing:.02em; transition:color .15s; position:relative}
-.tab svg{width:22px;height:22px}
+.solve .verdict{margin-left:auto; font-family:"IBM Plex Mono"; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; padding:4px 9px; border-radius:99px; white-space:nowrap}
+.solve .verdict.good{color:var(--good); border:1px solid rgba(87,224,139,.4)}
+.solve .verdict.emerg{color:var(--amber); border:1px solid rgba(255,179,71,.4)}
+.solve .verdict.no{color:var(--muted); border:1px solid var(--line2)}
+.solve .body{padding:0 16px 16px}
+.solve .body .r{display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line); font-size:.92rem; color:var(--muted)}
+.tl{display:flex; flex-direction:column; gap:0; margin-top:18px}
+.tl .row{display:flex; gap:14px; padding-bottom:22px; position:relative}
+.tl .row::before{content:""; position:absolute; left:9px; top:22px; bottom:-4px; width:2px; background:var(--line2)}
+.tl .row:last-child::before{display:none}
+.tl .dot{flex:0 0 auto; width:20px;height:20px;border-radius:50%; margin-top:2px; border:3px solid var(--void); z-index:1}
+.tl .row .when{font-family:"IBM Plex Mono"; font-size:.8rem; color:var(--muted)}
+.tl .row h4{font-size:1.05rem; margin:2px 0 5px}
+.tl .row p{margin:0; color:var(--muted); font-size:.94rem}
+.conf{display:inline-block; margin-top:7px; font-family:"IBM Plex Mono"; font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; padding:2px 8px; border-radius:99px}
+.scenario-note{margin-top:6px; border:1px dashed var(--line2); border-radius:12px; padding:12px 14px; color:var(--muted); font-size:.9rem}
+.build-card{border:1px solid var(--line); border-radius:12px; background:var(--panel); padding:14px}
+.build-card .nm{font-weight:700} .build-card .ty{font-family:"IBM Plex Mono"; font-size:.72rem; color:var(--zero)}
+.build-card p{margin:6px 0 0; color:var(--muted); font-size:.88rem}
+.build-card .chip2{display:inline-block;margin-top:8px;font-family:"IBM Plex Mono";font-size:.72rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.qcard{border:1px solid var(--line); border-radius:18px; background:var(--panel); padding:20px; max-width:600px}
+.qprog{height:6px;border-radius:99px;background:var(--panel2);overflow:hidden;margin-bottom:16px}
+.qprog span{display:block;height:100%;background:linear-gradient(90deg,var(--zero),var(--violet));transition:width .3s}
+.qq{font-family:"Bricolage Grotesque"; font-weight:700; font-size:1.15rem; margin-bottom:14px}
+.qopts{display:grid; gap:9px}
+.qopt{text-align:left; border:1px solid var(--line2); background:var(--panel2); color:var(--ink); font:inherit; padding:12px 15px; border-radius:12px; cursor:pointer; transition:.12s}
+.qopt:hover{border-color:var(--zero); background:var(--raised)}
+.qnav{display:flex; justify-content:space-between; align-items:center; margin-top:14px; color:var(--muted); font-size:.85rem}
+.chip{border:1px solid var(--line2); background:var(--panel); color:var(--ink); font:inherit; border-radius:99px; cursor:pointer}
+.result{text-align:center}
+.result .score{font-family:"Bricolage Grotesque"; font-weight:800; font-size:4rem; line-height:1; background:linear-gradient(120deg,var(--zero),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.result .band{font-family:"Bricolage Grotesque"; font-weight:800; font-size:1.4rem; margin-top:6px}
+.strengths{display:grid; gap:8px; margin:16px auto 0; max-width:420px; text-align:left}
+.strengths .s{display:flex; gap:10px; align-items:center; font-size:.92rem; border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--panel2)}
+.pathbox{margin-top:16px; border:1px solid var(--line); border-radius:12px; padding:13px; background:var(--panel2)}
+.pathbox .l{font-family:"IBM Plex Mono"; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--zero); margin-bottom:8px}
+.pathflow{display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:center}
+.pathflow .s{border:1px solid var(--line2); border-radius:99px; padding:5px 12px; font-size:.84rem}
+.pathflow .arr{color:var(--dim)}
+.explored{margin-top:22px; border:1px solid var(--line); border-radius:14px; padding:15px; background:var(--panel)}
+.explored .l{font-size:.8rem; color:var(--muted); font-family:"IBM Plex Mono"; margin-bottom:8px}
+.explored .track{height:8px;border-radius:99px;background:var(--panel2);overflow:hidden}
+.explored .track span{display:block;height:100%;background:linear-gradient(90deg,var(--zero),var(--violet));transition:width .4s}
+.sources{margin-top:26px; border-top:1px solid var(--line); padding-top:18px}
+.sources ol{margin:10px 0 0; padding-left:20px; color:var(--muted); font-size:.86rem}
+.sources li{margin:7px 0} .sources a{word-break:break-word}
+.foot{margin-top:26px; padding:22px 0 8px; border-top:1px solid var(--line); text-align:center}
+.sig{font-size:.9rem; color:var(--muted)} .sig b{color:var(--ink)}
+.disclaimer{margin-top:14px; font-size:.82rem; color:var(--dim); max-width:60ch}
+.tabs{position:fixed; left:0; right:0; bottom:0; z-index:50; height:calc(var(--tabh) + env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom); display:flex; background:rgba(9,12,22,.9); backdrop-filter:blur(16px); border-top:1px solid var(--line)}
+.tab{flex:1; border:0; background:none; color:var(--dim); cursor:pointer; font:inherit; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 2px; transition:.15s}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tab span{font-size:.66rem; font-weight:600}
 .tab[aria-selected="true"]{color:var(--zero)}
-.tab[aria-selected="true"]::before{content:""; position:absolute; top:0; width:26px; height:3px; border-radius:0 0 4px 4px; background:var(--zero)}
-@media(min-width:980px){
-  body{padding-bottom:0; padding-left:96px}
-  .tabs{top:0; bottom:0; right:auto; width:88px; height:100vh; flex-direction:column; justify-content:flex-start; gap:6px; padding-top:76px; border-top:0; border-right:1px solid var(--line)}
-  .tab{flex:0 0 auto; padding:12px 0}
-  .tab[aria-selected="true"]::before{top:50%; transform:translateY(-50%); left:0; width:3px; height:26px; border-radius:0 4px 4px 0}
+@media(min-width:1000px){
+  body{padding-bottom:20px; padding-left:96px}
+  .tabs{top:0; bottom:0; right:auto; width:96px; height:100vh; flex-direction:column; justify-content:flex-start; gap:4px; padding-top:80px; border-top:0; border-right:1px solid var(--line)}
+  .tab{flex:0 0 auto; width:100%; padding:12px 4px}
+  .top{padding-left:96px}
 }
 .hide{display:none!important}
-
 @media(max-width:430px){
-  .wrap{padding:0 15px}
+  .wrap{padding-inline:15px}
   .slot button{width:34px;height:38px;font-size:.82rem}
-  .slots{height:46px}
-  .slot{height:46px}
+  .slots{height:46px} .slot{height:46px}
   .wire .lbl{width:30px;font-size:.78rem}
-  .measure-cell{width:46px}
-  .mbtn{width:38px;height:38px;font-size:.62rem}
+  .measure-cell{width:46px} .mbtn{width:38px;height:38px;font-size:.62rem}
   .pgate{width:42px;height:42px}
-  .pcard .val{font-size:1.25rem}
-  .tnode{flex-basis:84%}
 }
 </style>
 </head>
-<body>
-
+<body data-level="beginner">
 <header class="top">
   <div class="wrap">
-    <div class="logo">
+    <button class="logo" onclick="go('home')" aria-label="QuantumX home">
       <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
         <circle cx="16" cy="16" r="5.5" fill="url(#g1)"/>
         <g stroke="url(#g2)" stroke-width="1.6" fill="none" opacity=".9">
@@ -402,391 +315,214 @@ h3{font-size:1.12rem; letter-spacing:-.01em}
         </defs>
       </svg>
       Quantum<b>X</b>
-    </div>
-    <div class="spacer"></div>
-    <button class="persona-chip" id="personaChip" onclick="go('home')">
-      <span class="dot"></span><span id="personaLabel">Curious explorer</span>
     </button>
+    <div class="spacer"></div>
+    <div class="levels" id="levelCtl" role="group" aria-label="Difficulty level">
+      <button data-lvl="beginner" aria-pressed="true">Beginner</button>
+      <button data-lvl="explorer" aria-pressed="false">Explorer</button>
+      <button data-lvl="technical" aria-pressed="false">Tech</button>
+    </div>
   </div>
 </header>
-
-<main class="wrap" id="main">
-
-<!-- ============ HOME ============ -->
+<main id="main">
 <section class="view active" id="home">
-  <div class="hero">
-    <div class="hero-grid">
-      <div>
-        <div class="eyebrow">The quantum era · zero prior knowledge needed</div>
-        <h1>Don't just learn quantum. <span class="grad">Explore where it's going.</span></h1>
-        <p class="lead">Understand a qubit. Build a circuit that entangles. Then look ahead to how computing could change between now and 2040+.</p>
-        <div class="cta-row">
-          <button class="btn primary" onclick="go('lab')">⚛ Play with a qubit</button>
-          <button class="btn" onclick="go('learn')">Start learning</button>
-        </div>
-        <div class="readiness-mini">
-          <div>
-            <div class="eyebrow" style="color:var(--muted)">Your quantum readiness</div>
-            <div class="mono" style="font-size:1.4rem;font-weight:600" id="homeReadyPct">Take the quiz →</div>
-          </div>
-          <div class="rail"><span id="homeReadyRail"></span></div>
-        </div>
+  <div class="wrap">
+    <div class="home-hero">
+      <div class="mini-orb"><canvas id="homeBloch" width="300" height="300"></canvas></div>
+      <div class="eyebrow">Zero prior knowledge needed</div>
+      <h1>Quantum Computing, <span class="grad">Made Simple</span></h1>
+      <p class="lead">Understand qubits, superposition and entanglement — then play with a real quantum computer simulator.</p>
+      <div class="cta-row">
+        <button class="btn primary big" onclick="startJourney()">&#9654; Start the 10-minute journey</button>
+        <button class="btn big ghost" onclick="go('lab')">I just want to experiment &rarr;</button>
       </div>
-
-      <div>
-        <div class="stage">
-          <canvas id="heroBloch" width="640" height="520" aria-label="Interactive qubit on a Bloch sphere"></canvas>
-          <div class="hint">drag to rotate · tap gates below</div>
-        </div>
-        <div class="readout">
-          <div class="pcard z"><div class="lab">measure → 0</div><div class="val" id="hp0">100%</div><div class="pbar"><span id="hb0" style="width:100%"></span></div></div>
-          <div class="pcard o"><div class="lab">measure → 1</div><div class="val" id="hp1">0%</div><div class="pbar"><span id="hb1" style="width:0%"></span></div></div>
-        </div>
-        <div class="gaterow" id="heroGates"></div>
-        <div class="state-note" id="heroNote">This qubit is a definite <b>0</b>. Apply <b class="mono">H</b> to put it in superposition — a genuine both-at-once state, not a coin mid-flip.</div>
+      <div class="resume" id="resumeLine"></div>
+      <div class="willknow">
+        <div class="l">In 10 minutes you'll understand</div>
+        <ul>
+          <li>What a <b>qubit</b> is, and how it differs from a normal bit</li>
+          <li>What <b>superposition</b> and <b>entanglement</b> really mean</li>
+          <li>Why quantum computers are <b>different</b> — not just faster</li>
+          <li>Where they could help, and what the <b>future</b> might hold</li>
+        </ul>
+      </div>
+      <div class="levelpick" id="levelPick" role="group" aria-label="Choose your level">
+        <button class="lp" data-lvl="beginner" aria-pressed="true"><span class="em">&#127793;</span><span><span class="t">Beginner</span><br><span class="d">Plain language and analogies. Jargon stays hidden until you want it.</span></span></button>
+        <button class="lp" data-lvl="explorer" aria-pressed="false"><span class="em">&#129517;</span><span><span class="t">Explorer</span><br><span class="d">Adds the real terms and a bit more depth as you go.</span></span></button>
+        <button class="lp" data-lvl="technical" aria-pressed="false"><span class="em">&#9881;&#65039;</span><span><span class="t">Technical</span><br><span class="d">Everything on: gates, algorithms, hardware, error correction.</span></span></button>
       </div>
     </div>
   </div>
-
-  <section class="block">
-    <div class="eyebrow">Where do you want to start?</div>
-    <div class="big-cards">
-      <button class="bcard u" onclick="go('learn')"><div class="ic">⚛️</div><h3>Understand</h3><p>What actually is a qubit? Superposition, entanglement and measurement — one idea at a time.</p><div class="go">Learn the ideas →</div></button>
-      <button class="bcard e" onclick="go('lab')"><div class="ic">🧪</div><h3>Experiment</h3><p>Build your first quantum circuit on a real 2-qubit simulator and create entanglement yourself.</p><div class="go">Open the lab →</div></button>
-      <button class="bcard x" onclick="go('future')"><div class="ic">🔮</div><h3>Explore</h3><p>What could quantum computing look like in 2035 or 2040? A foresight timeline, not a hype reel.</p><div class="go">See the future →</div></button>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">Personalize your path</div>
-    <h2 class="big">Why are you here?</h2>
-    <p class="kicker">Pick what fits — the Learn and Progress tabs adapt their recommended order to you.</p>
-    <div class="chips" id="personaChips"></div>
-  </section>
 </section>
-
-<!-- ============ LEARN ============ -->
 <section class="view" id="learn">
-  <section class="block">
-    <div class="eyebrow">01 · From bits to qubits</div>
-    <h2 class="big">A classical bit is a switch</h2>
-    <p class="kicker">Every phone, laptop and server today runs on bits: each one is either 0 or 1. Flip the switch.</p>
-    <div style="margin-top:18px; display:flex; align-items:center; gap:18px; flex-wrap:wrap">
-      <button id="bitSwitch" class="btn" style="font-family:'IBM Plex Mono';font-size:1.4rem;min-width:120px;justify-content:center" onclick="toggleBit()">0</button>
-      <p class="kicker" style="margin:0">A bit is decisive but limited — it holds one answer at a time. <b style="color:var(--ink)">What if a computer could work with a state that behaves differently from an ordinary 0 or 1?</b></p>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">02 · Enter the quantum world</div>
-    <h2 class="big">The qubit lives on a sphere</h2>
-    <p class="kicker">A qubit's state is a point on a sphere. The north pole is 0, the south pole is 1 — and everywhere in between is <b style="color:var(--ink)">superposition</b>. Apply gates and watch it move; the bars show what a measurement would most likely give.</p>
-    <div style="max-width:520px; margin-top:18px">
-      <div class="stage">
-        <canvas id="learnBloch" width="640" height="520"></canvas>
-        <div class="hint">drag to rotate</div>
-      </div>
-      <div class="readout">
-        <div class="pcard z"><div class="lab">P(measure 0)</div><div class="val" id="lp0">100%</div><div class="pbar"><span id="lb0" style="width:100%"></span></div></div>
-        <div class="pcard o"><div class="lab">P(measure 1)</div><div class="val" id="lp1">0%</div><div class="pbar"><span id="lb1" style="width:0%"></span></div></div>
-      </div>
-      <div class="gaterow" id="learnGates"></div>
-      <div class="state-note" id="learnNote"></div>
-    </div>
-    <div class="cards c2" style="margin-top:22px">
-      <div class="card"><div class="ic">🌗</div><h3>Superposition</h3><p>Before measurement a qubit holds a weighted blend of 0 and 1 at once. n qubits track 2ⁿ possibilities simultaneously.</p></div>
-      <div class="card"><div class="ic">🔗</div><h3>Entanglement</h3><p>Two qubits can share one joint state, so measuring one instantly tells you about the other — stronger than any classical correlation.</p></div>
-      <div class="card"><div class="ic">📏</div><h3>Measurement</h3><p>Looking collapses the blend to a single classical 0 or 1, with probabilities set by the state. You only ever read out ordinary bits.</p></div>
-      <div class="card"><div class="ic">🌊</div><h3>Interference</h3><p>Amplitudes can add or cancel like waves. Good quantum algorithms are choreographies that cancel wrong answers and amplify right ones.</p></div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">03 · Side by side</div>
-    <h2 class="big">Quantum vs classical</h2>
-    <table class="cmp">
-      <thead><tr><th>Classical</th><th class="q">Quantum</th></tr></thead>
-      <tbody>
-        <tr><td>Bit (0 or 1)</td><td class="qv">Qubit (a state on the sphere)</td></tr>
-        <tr><td>Logic gates (AND, OR, NOT)</td><td class="qv">Quantum gates (H, X, Z, CNOT…)</td></tr>
-        <tr><td>Deterministic result</td><td class="qv">Probabilistic result on measurement</td></tr>
-        <tr><td>CPU / GPU</td><td class="qv">QPU (quantum processing unit)</td></tr>
-        <tr><td>Transistors</td><td class="qv">Superconductors, trapped ions, photons…</td></tr>
-        <tr><td>Scales linearly with bits</td><td class="qv">State space grows as 2ⁿ with qubits</td></tr>
-      </tbody>
-    </table>
-    <p class="kicker" style="margin-top:16px"><b style="color:var(--ink)">The key point:</b> quantum computers aren't simply faster computers. They offer advantages for <b style="color:var(--ink)">specific classes of problems</b> — chemistry, certain optimization, factoring — while classical machines stay better at almost everything else.</p>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">04 · Keeping it honest</div>
-    <h2 class="big">Quantum hype vs reality</h2>
-    <p class="kicker">The single most useful thing you can learn early — where the excitement is real and where it's overstated.</p>
-    <div class="mr" id="mythList"></div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">05 · Why it matters</div>
-    <h2 class="big">Two algorithms that changed the conversation</h2>
-    <div class="algo">
-      <h3>Grover's algorithm — searching the unsorted</h3>
-      <div class="row"><div class="name">Classical</div><div class="track c"><span id="grovC"></span></div></div>
-      <div class="row"><div class="name">Quantum</div><div class="track q"><span id="grovQ"></span></div></div>
-      <p class="caption">A <b style="color:var(--ink)">quadratic</b> speedup for certain search problems: work that scales like N for a classical machine scales like √N here. Real, but modest — it won't break encryption on its own.</p>
-    </div>
-    <div class="algo">
-      <h3>Shor's algorithm — factoring large numbers</h3>
-      <div class="row"><div class="name">Classical</div><div class="track c"><span id="shorC"></span></div></div>
-      <div class="row"><div class="name">Quantum</div><div class="track q"><span id="shorQ"></span></div></div>
-      <p class="caption">An <b style="color:var(--ink)">exponential</b> speedup for factoring — the maths that much of today's public-key cryptography relies on. This is the main reason quantum computing matters to security. It needs a large, error-corrected machine we don't have yet.</p>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">06 · Will quantum break the internet?</div>
-    <h2 class="big">The crypto question, in plain terms</h2>
-    <div class="evo" style="margin-bottom:6px">
-      <span class="step">Today's internet</span><span class="arr">→</span>
-      <span class="step">Public-key crypto (RSA/ECC)</span><span class="arr">→</span>
-      <span class="step">Large fault-tolerant quantum computer</span><span class="arr">→</span>
-      <span class="step" style="border-color:var(--spec);color:var(--spec)">Some crypto breakable</span><span class="arr">→</span>
-      <span class="step" style="border-color:var(--good);color:var(--good)">Post-quantum crypto</span>
-    </div>
-    <p class="kicker"><b style="color:var(--ink)">"Harvest now, decrypt later."</b> An adversary can record encrypted traffic today and store it, betting that a future quantum computer will decrypt it. So long-lived secrets — health records, state files, banking, digital signatures — are already at some risk, even before a capable machine exists.</p>
-    <p class="kicker" style="margin-top:10px">The defense is already standardized. In <b style="color:var(--ink)">August 2024</b> NIST finalized its first post-quantum cryptography standards — <span class="mono">FIPS 203 (ML-KEM)</span>, <span class="mono">FIPS 204 (ML-DSA)</span> and <span class="mono">FIPS 205 (SLH-DSA)</span> — and urged organizations to begin migrating.<sup><a href="#src" style="color:var(--zero)">3,4</a></sup> The US NSA's CNSA 2.0 sets 2030 as a migration deadline for national-security systems.<sup><a href="#src" style="color:var(--zero)">4</a></sup></p>
-    <p class="kicker" style="margin-top:10px">This connects quantum computing to things you use every day: messaging, banking, cloud storage, government systems and digital signatures.</p>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">07 · The pairing everyone asks about</div>
-    <h2 class="big">Quantum + AI</h2>
-    <div class="cards c2">
-      <div class="card"><h3>What researchers are trying</h3><p>Quantum machine learning explores whether qubits and quantum circuits can represent or search certain patterns more efficiently than classical models — in chemistry, optimization and specialized kernels.</p></div>
-      <div class="card"><h3>Where it may help</h3><p>Simulating quantum systems (molecules, materials) is a natural fit, and some optimization sub-problems inside larger AI pipelines could benefit.</p></div>
-      <div class="card"><h3>Current limitations</h3><p>Loading big classical datasets into quantum states is expensive, hardware is small and noisy, and few quantum-ML advantages are proven at useful scale.</p></div>
-      <div class="card"><h3>Why GPUs still win</h3><p>Today's LLMs and neural nets run brilliantly on classical GPUs. Quantum is a research frontier for AI, not a replacement for the stack that trains models now.</p></div>
-    </div>
-    <div class="disclaimer">Reality check: "quantum will make AI 1000× faster" is not an established result. Quantum machine learning is an active research area; treat production-scale claims with healthy skepticism.</div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">08 · How it all stacks up</div>
-    <h2 class="big">The quantum computing stack</h2>
-    <p class="kicker">A working quantum computer is many layers deep. Tap any layer to see what it does.</p>
-    <div class="stack" id="stackList"></div>
-  </section>
+  <div class="jbar"><div class="wrap"><div class="row">
+    <div class="jdots" id="jdots"></div>
+    <div class="jstep-label" id="jstepLabel">Step 1 / 7</div>
+  </div></div></div>
+  <div class="wrap" id="journeyHost"></div>
 </section>
-
-<!-- ============ LAB ============ -->
 <section class="view" id="lab">
-  <section class="block">
-    <div class="eyebrow">Signature feature · a real simulator</div>
-    <h2 class="big">The lab</h2>
-    <p class="kicker">Everything here runs on an actual quantum state-vector simulator in your browser — the probabilities and entanglement are computed, not faked.</p>
-  </section>
-
-  <section class="block" style="border-top:0;padding-top:6px">
-    <h3 style="font-size:1.25rem">Play with a qubit</h3>
-    <p class="kicker" style="margin-top:4px">Start with one qubit. The sphere <i>is</i> the qubit's state — top means a guaranteed 0, bottom means a guaranteed 1, and anywhere in between is <b style="color:var(--ink)">superposition</b>. Tap the gates below to move it, and watch the two bars: they're the chance of measuring 0 versus 1 right now.</p>
-    <div style="max-width:520px;margin-top:16px">
-      <div class="stage">
-        <canvas id="labBloch" width="640" height="520"></canvas>
-        <div class="hint">drag to rotate</div>
+  <div class="wrap">
+    <section class="block">
+      <div class="eyebrow">&#129514; Try a quantum computer</div>
+      <h2 class="big">See quantum behaviour for yourself</h2>
+      <p class="kicker">Everything here runs on a real quantum simulator in your browser — the probabilities and entanglement are computed, not faked. Play freely; nothing to break.</p>
+    </section>
+    <section class="block">
+      <h3>1 &middot; Play with a single qubit</h3>
+      <p class="kicker" style="margin-top:4px">The sphere <i>is</i> the qubit's state — top = a sure 0, bottom = a sure 1, in between = <b style="color:var(--ink)">superposition</b>. Tap gates and watch the two bars: your chance of measuring 0 vs 1 right now.</p>
+      <div style="max-width:520px;margin-top:16px">
+        <div class="stage"><canvas id="labBloch" width="640" height="520"></canvas><div class="hint">drag to rotate</div></div>
+        <div class="readout">
+          <div class="pcard z"><div class="lab">Chance of 0</div><div class="val" id="qp0">100%</div><div class="pbar"><span id="qb0" style="width:100%"></span></div></div>
+          <div class="pcard o"><div class="lab">Chance of 1</div><div class="val" id="qp1">0%</div><div class="pbar"><span id="qb1" style="width:0%"></span></div></div>
+        </div>
+        <div class="gaterow" id="labGates"></div>
+        <div class="state-note" id="labNote"></div>
       </div>
-      <div class="readout">
-        <div class="pcard z"><div class="lab">P(measure 0)</div><div class="val" id="qp0">100%</div><div class="pbar"><span id="qb0" style="width:100%"></span></div></div>
-        <div class="pcard o"><div class="lab">P(measure 1)</div><div class="val" id="qp1">0%</div><div class="pbar"><span id="qb1" style="width:0%"></span></div></div>
+    </section>
+    <section class="block">
+      <h3>2 &middot; Build a 2-qubit circuit — and watch entanglement happen</h3>
+      <p class="kicker" style="margin-top:4px">The two panels below tell the same story from two sides: what the physics <b style="color:var(--ink)">predicts</b>, and what actually <b style="color:var(--ink)">happens</b> when you measure. Compare them.</p>
+      <div class="labguide">
+        <div class="lg-steps">
+          <div class="lg-step"><span class="lg-n">1</span><div><b>Place gates.</b> Tap a gate, then tap a slot on a wire — or hit a <b>preset</b> to load a ready-made circuit.</div></div>
+          <div class="lg-step"><span class="lg-n">2</span><div><b>Read the prediction.</b> The left panel lists every possible result and how likely it is, before you measure.</div></div>
+          <div class="lg-step"><span class="lg-n">3</span><div><b>Run 200 shots.</b> This measures the circuit 200 times for real. The right panel shows where the results landed.</div></div>
+        </div>
+        <div class="lg-legend">
+          <span class="lg-tag"><span class="sw z"></span>reads <b>0</b></span>
+          <span class="lg-tag"><span class="sw o"></span>reads <b>1</b></span>
+          <span class="lg-tag"><code>|0&rang;</code> one qubit</span>
+          <span class="lg-tag"><code>|00&rang;</code> both qubits, top then bottom</span>
+        </div>
       </div>
-      <div class="gaterow" id="labGates"></div>
-      <div class="state-note" id="labNote"></div>
-    </div>
-  </section>
-
-  <section class="block">
-    <h3 style="font-size:1.25rem">Build a circuit — and watch entanglement happen</h3>
-    <p class="kicker" style="margin-top:4px">This is a real 2-qubit quantum computer, simulated live in your browser. The two panels below always show the same story from two sides: what the physics <b style="color:var(--ink)">predicts</b>, and what actually <b style="color:var(--ink)">happens</b> when you measure. The whole point is to compare them.</p>
-
-    <div class="labguide">
-      <div class="lg-steps">
-        <div class="lg-step"><span class="lg-n">1</span><div><b>Place gates.</b> Tap a gate (H, X, Z, T, CNOT), then tap a slot on a wire to drop it in — or hit a <b>preset</b> to load a ready-made circuit.</div></div>
-        <div class="lg-step"><span class="lg-n">2</span><div><b>Read the prediction.</b> The left panel lists every possible result and how likely it is — before you measure anything.</div></div>
-        <div class="lg-step"><span class="lg-n">3</span><div><b>Run 200 shots.</b> This measures the circuit 200 times for real. The right panel shows where those random results actually landed.</div></div>
+      <div class="circuit">
+        <div class="palette" id="palette"><span class="pl">gates</span></div>
+        <div class="selnote" id="selNote">Tip: tap H, then tap a slot on the top wire &middot; then tap CNOT and place it in the next column.</div>
+        <div class="wires" id="wires"></div>
+        <div class="circ-actions">
+          <button class="btn" onclick="loadPreset('bell')">Bell state preset</button>
+          <button class="btn" onclick="loadPreset('super')">Superposition preset</button>
+          <button class="btn" onclick="clearCircuit()">Clear</button>
+          <button class="btn primary" onclick="runShots()">Run 200 shots</button>
+        </div>
       </div>
-      <div class="lg-legend">
-        <span class="lg-tag"><span class="sw z"></span>qubit reads <b>0</b></span>
-        <span class="lg-tag"><span class="sw o"></span>qubit reads <b>1</b></span>
-        <span class="lg-tag"><code>|0⟩</code> one qubit</span>
-        <span class="lg-tag"><code>|00⟩</code> both qubits, top then bottom</span>
+      <div class="qout">
+        <div class="qpanel">
+          <h4>Prediction — chance of each result</h4>
+          <p class="qsub"><b>Before</b> you measure. <code>|00&rang;</code> = top qubit reads 0, bottom reads 0. The four always add up to 100%.<span class="lvl-exp"> These are the amplitudes&sup2;, the core quantum quantity.</span></p>
+          <div id="ampList"></div>
+          <div class="ent" id="entBox"></div>
+        </div>
+        <div class="qpanel">
+          <h4>Reality — 200 real measurements</h4>
+          <p class="qsub"><b>After</b> measuring. Each shot forces one answer — taller bar = came up more often.</p>
+          <div class="shots" id="shotsBox"></div>
+          <p class="qsub" style="margin:10px 0 0" id="shotsNote">Press <b style="color:var(--ink)">Run 200 shots</b> to sample real measurements. Each shot collapses the state to one classical result.</p>
+        </div>
       </div>
-    </div>
-
-    <div class="circuit">
-      <div class="palette" id="palette">
-        <span class="pl">gates</span>
+      <div class="lookfor">
+        <span class="hl">&#128064; Try this.</span> Load the <b>Bell state preset</b> and run shots: only <code>|00&rang;</code> and <code>|11&rang;</code> ever appear — <i>never</i> <code>|01&rang;</code> or <code>|10&rang;</code>. Each result is random, yet the two qubits <i>always agree</i>. That agreement is entanglement, and you're watching it. Now load <b>Superposition preset</b>: all four appear equally — random <i>and independent</i>. Same randomness, different structure.
       </div>
-      <div class="selnote" id="selNote">Tip: select H, tap q0 · then select CNOT, tap q0 in the next column.</div>
-      <div class="wires" id="wires"></div>
-      <div class="circ-actions">
-        <button class="btn" onclick="loadPreset('bell')">Bell state preset</button>
-        <button class="btn" onclick="loadPreset('super')">Superposition preset</button>
-        <button class="btn" onclick="clearCircuit()">Clear</button>
-        <button class="btn primary" onclick="runShots()">Run 200 shots</button>
-      </div>
-    </div>
-
-    <div class="qout">
-      <div class="qpanel">
-        <h4>Live state — amplitudes²</h4>
-        <p class="qsub"><b>The prediction.</b> How likely each result is <i>before</i> you measure. <code>|00⟩</code> means the top qubit reads 0 and the bottom reads 0. The four always add up to 100%.</p>
-        <div id="ampList"></div>
-        <div class="ent" id="entBox"></div>
-      </div>
-      <div class="qpanel">
-        <h4>Measurement outcomes</h4>
-        <p class="qsub"><b>The reality.</b> 200 actual measurements. Each one forces the qubits to pick a single answer — the taller the bar, the more often that result came up.</p>
-        <div class="shots" id="shotsBox"></div>
-        <p class="caption" style="font-size:.8rem;color:var(--muted);margin-top:10px" id="shotsNote">Press <b style="color:var(--ink)">Run 200 shots</b> to sample real measurements. Each shot collapses the state to one classical result.</p>
-      </div>
-    </div>
-
-    <div class="lookfor">
-      <span class="hl">👀 Try this to actually see it.</span> Load the <b>Bell state preset</b> and run shots: only <code>|00⟩</code> and <code>|11⟩</code> ever show up — <i>never</i> <code>|01⟩</code> or <code>|10⟩</code>. Each result is random, yet the two qubits <i>always agree</i>. That impossible-sounding agreement is what "entanglement" means, and you're watching it. Now load the <b>Superposition preset</b>: all four outcomes appear equally, because now the qubits are random <i>and independent</i>. Same randomness — completely different structure. That contrast is the whole idea.
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">Can quantum solve this?</div>
-    <h2 class="big">When quantum actually helps</h2>
-    <p class="kicker">The honest answer is usually "it depends." Tap each to see how a problem gets sized up.</p>
-    <div id="solveList"></div>
-  </section>
+    </section>
+  </div>
 </section>
-
-<!-- ============ FUTURE ============ -->
+<section class="view" id="why">
+  <div class="wrap">
+    <section class="block">
+      <div class="eyebrow">Why should I care?</div>
+      <h2 class="big">Where quantum computing could matter</h2>
+      <p class="kicker">Quantum computers won't run your email or replace your laptop. They're being built for a few <b style="color:var(--ink)">specific</b> kinds of problems where they might do something classical machines can't.</p>
+      <div class="grid c2" style="margin-top:18px">
+        <div class="why-card"><div class="ic">&#128274;</div><h3>Security</h3><p>Future quantum computers could break some of today's public-key encryption. That's why the world is already moving to new "post-quantum" standards.</p></div>
+        <div class="why-card"><div class="ic">&#129516;</div><h3>Science</h3><p>Nature runs on quantum rules, so quantum machines may simulate molecules and materials — helping design drugs, batteries and catalysts.</p></div>
+        <div class="why-card"><div class="ic">&#128506;&#65039;</div><h3>Optimization</h3><p>Some hard "find the best option out of trillions" problems in logistics or finance may benefit — though good classical solvers are strong competition.</p></div>
+        <div class="why-card"><div class="ic">&#129302;</div><h3>AI</h3><p>Quantum + AI is an active research area. Today, quantum computers are <b style="color:var(--ink)">not</b> replacing the GPUs that power modern AI.</p></div>
+      </div>
+      <div class="takeaway"><b>Key idea:</b> Quantum doesn't automatically mean "faster." It means a different tool for a few special jobs.</div>
+    </section>
+    <section class="block">
+      <h3>Can quantum solve this? Tap to size up a problem.</h3>
+      <p class="kicker" style="margin-top:4px">The honest answer is usually "it depends." Here's how a few real problems get judged.</p>
+      <div id="solveList" style="margin-top:14px"></div>
+    </section>
+  </div>
+</section>
 <section class="view" id="future">
-  <section class="block">
-    <div class="eyebrow">Foresight, not fortune-telling</div>
-    <h2 class="big">The quantum future timeline</h2>
-    <p class="kicker">These years are <b style="color:var(--ink)">possible evolution</b>, not guarantees. Each milestone carries a confidence level so you can weigh it honestly. Scroll sideways.</p>
-    <div class="legend">
-      <span><span class="d" style="background:var(--good)"></span>Strong expectation</span>
-      <span><span class="d" style="background:var(--plaus)"></span>Plausible</span>
-      <span><span class="d" style="background:var(--dep)"></span>Research-dependent</span>
-      <span><span class="d" style="background:var(--spec)"></span>Speculative</span>
-    </div>
-    <div class="tl-scroll" id="timeline"></div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">The build-up</div>
-    <h2 class="big">From qubit to quantum computer</h2>
-    <div class="evo">
-      <span class="step">Qubit</span><span class="arr">→</span>
-      <span class="step">Many qubits</span><span class="arr">→</span>
-      <span class="step">Quantum circuit</span><span class="arr">→</span>
-      <span class="step">QPU</span><span class="arr">→</span>
-      <span class="step">Error correction</span><span class="arr">→</span>
-      <span class="step">Fault-tolerant machine</span><span class="arr">→</span>
-      <span class="step" style="border-color:var(--zero);color:var(--zero)">Quantum + classical hybrid</span>
-    </div>
-    <p class="kicker" style="margin-top:14px">The hard step is error correction. Qubits are fragile, so a useful <b style="color:var(--ink)">logical</b> qubit is protected by many physical ones. Google's Willow chip (105 qubits, Dec 2024) was the landmark proof that adding more physical qubits can <b style="color:var(--ink)">reduce</b> the logical error rate rather than increase it — the threshold everyone was chasing.<sup><a href="#src" style="color:var(--zero)">1,2</a></sup></p>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">The ecosystem · as of 2026, changes fast</div>
-    <h2 class="big">Who is building quantum</h2>
-    <p class="kicker">Different bets on how to build a qubit. No approach has clearly won.</p>
-    <div class="builders" id="builders"></div>
-    <div class="disclaimer">This landscape moves quickly and figures are approximate snapshots. Milestones cited reflect public announcements through mid-2026; always check a primary source for the latest.</div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">The signature foresight tool</div>
-    <h2 class="big">Quantum future simulator</h2>
-    <p class="kicker">Pick a year and an industry to generate a grounded scenario — with a probability, a confidence level, and what would have to happen first.</p>
-    <div class="sim">
-      <div class="selrow">
-        <div class="selgrp">
-          <div class="pl">YEAR</div>
-          <div class="opts" id="simYears"></div>
-        </div>
-        <div class="selgrp">
-          <div class="pl">INDUSTRY</div>
-          <div class="opts" id="simInds"></div>
-        </div>
+  <div class="wrap">
+    <section class="block">
+      <div class="eyebrow">What might happen next</div>
+      <h2 class="big">The road ahead</h2>
+      <p class="kicker">Nobody can predict this precisely. Think of these as <b style="color:var(--ink)">scenarios</b>, not promises — and notice how the confidence drops the further out we look.</p>
+      <div class="tl" id="tlSimple">
+        <div class="row"><div class="dot" style="background:var(--good)"></div><div><div class="when">Today</div><h4>Research &amp; early quantum machines</h4><p>Real hardware exists and improves fast, but it's still small and error-prone. Great for experiments, not yet for everyday useful work.</p><span class="conf" style="color:var(--good);border:1px solid rgba(87,224,139,.4)">Happening now</span></div></div>
+        <div class="row"><div class="dot" style="background:var(--plaus)"></div><div><div class="when">2026 &ndash; 2030</div><h4>Better hardware &amp; error correction</h4><p>More stable qubits and early error correction. The first careful demonstrations of a quantum computer doing something genuinely useful.</p><span class="conf" style="color:var(--plaus);border:1px solid rgba(255,207,92,.4)">Plausible</span></div></div>
+        <div class="row"><div class="dot" style="background:var(--dep)"></div><div><div class="when">2030 &ndash; 2035</div><h4>Possible early quantum advantage</h4><p>In narrow areas like chemistry, quantum machines may start beating classical methods — and a code-breaking-capable machine may come into view.</p><span class="conf" style="color:var(--dep);border:1px solid rgba(255,154,82,.4)">Research-dependent</span></div></div>
+        <div class="row"><div class="dot" style="background:var(--spec)"></div><div><div class="when">2035 &ndash; 2040+</div><h4>Potential fault-tolerant systems</h4><p>Large, reliable, error-corrected machines working beside classical computers for the special jobs they're best at. The big prize — and the least certain.</p><span class="conf" style="color:var(--spec);border:1px solid rgba(255,107,138,.4)">Speculative</span></div></div>
       </div>
-      <div class="scenario" id="scenario"></div>
-    </div>
-  </section>
+      <div class="scenario-note">&#128301; These dates are best-guess ranges from public roadmaps and expert estimates. They shift often — treat them as direction, not a schedule.</div>
+    </section>
+    <section class="block lvl-exp">
+      <span class="lvl-tag">Explorer detail</span>
+      <h3>A closer look at the milestones</h3>
+      <p class="kicker" style="margin-top:4px">The same story with specific announcements and confidence labels.</p>
+      <div class="tl" id="tlDetailed" style="margin-top:16px"></div>
+    </section>
+    <section class="block lvl-tech">
+      <span class="lvl-tag">Technical detail</span>
+      <h3>Who is building quantum computers</h3>
+      <p class="kicker" style="margin-top:4px">Different companies bet on different kinds of qubit — each with trade-offs.</p>
+      <div class="grid c2" id="buildersList" style="margin-top:16px"></div>
+    </section>
+  </div>
 </section>
-
-<!-- ============ PROGRESS ============ -->
 <section class="view" id="progress">
-  <section class="block">
-    <div class="eyebrow">Measure yourself</div>
-    <h2 class="big">Quantum readiness score</h2>
-    <p class="kicker">Ten quick questions. No right or wrong — it maps where you are and hands you a learning path.</p>
-    <div class="quiz" id="quizBox"></div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">Your journey</div>
-    <h2 class="big">Recommended path</h2>
-    <p class="kicker" id="pathIntro">Pick a persona on the Home tab to tailor this order.</p>
-    <div class="pathbox">
-      <div class="l">SUGGESTED ORDER</div>
-      <div class="pathflow" id="pathFlow"></div>
-    </div>
-    <div class="explored">
-      <div class="eyebrow" style="color:var(--muted)">Sections explored</div>
-      <div class="rail" style="max-width:240px"><span id="exploredRail"></span></div>
-      <div class="mono" id="exploredPct" style="color:var(--muted);font-size:.85rem"></div>
-    </div>
-  </section>
-
-  <section class="block" id="src">
-    <div class="eyebrow">Sources & further reading</div>
-    <h2 class="big">Citations</h2>
-    <div class="sources">
-      <ol>
-        <li id="s1"><b>Google Willow / below-threshold error correction (Dec 2024).</b> Willow is a 105-qubit superconducting chip; adding qubits lowered the logical error rate — widely called the most significant result since the 2019 supremacy demonstration. <a href="https://quantummarketcap.com/roadmap" target="_blank" rel="noopener">Quantum roadmap tracker</a>, <a href="https://www.technerdo.com/blog/quantum-computing-milestones-2026" target="_blank" rel="noopener">milestones 2025–26</a>.</li>
-        <li id="s2"><b>IBM roadmap — Nighthawk & fault tolerance.</b> IBM's Nighthawk (120 qubits) targets quantum advantage by end-2026, with a published path (qLDPC codes) toward fault tolerance around 2029. <a href="https://pdpspectra.com/blog/quantum-computing-landscape-2026/" target="_blank" rel="noopener">Landscape 2026</a>, <a href="https://quantumsecuritydefence.com/quantum-news/quantum-computing-progress-2026-ibm-google/" target="_blank" rel="noopener">progress 2026</a>.</li>
-        <li id="s3"><b>NIST post-quantum standards (Aug 2024).</b> FIPS 203 (ML-KEM/Kyber), FIPS 204 (ML-DSA/Dilithium), FIPS 205 (SLH-DSA/SPHINCS+) finalized 13 Aug 2024. <a href="https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards" target="_blank" rel="noopener">NIST announcement</a>, <a href="https://csrc.nist.gov/news/2024/postquantum-cryptography-fips-approved" target="_blank" rel="noopener">CSRC</a>.</li>
-        <li id="s4"><b>Migration urgency & "Q-Day" estimates.</b> NSA CNSA 2.0 sets a 2030 migration deadline for national-security systems; independent analyses place a central "Q-Day" estimate around 2033–2035. <a href="https://quantumsecuritydefence.com/quantum-news/quantum-computing-progress-2026-ibm-google/" target="_blank" rel="noopener">Q-Day analysis</a>.</li>
-        <li id="s5"><b>Costs, scale & other players.</b> Leading gate-based systems hold ~100–1,000+ physical qubits; a full fault-tolerant machine may need millions. Single systems cost tens of millions of dollars. IonQ (trapped ions) and Quantinuum reported record gate fidelities in late 2025. <a href="https://informbytes.com/blog/quantum-computing-breakthroughs-2025/" target="_blank" rel="noopener">Breakthroughs 2025</a>, <a href="https://entangledfuture.com/roadmaps/" target="_blank" rel="noopener">roadmap tracker</a>.</li>
-      </ol>
-    </div>
-    <div class="foot">
-      <div class="sig">Designed &amp; Architected by <b>Krishnamurthy Kandregula</b> · Made by Claude</div>
-      <div style="margin-top:6px">Krishnamurthy Kandregula Innovation Lab · QuantumX — an interactive guide to the quantum era</div>
-    </div>
-  </section>
+  <div class="wrap">
+    <section class="block">
+      <div class="eyebrow">&#127919; How quantum-ready are you?</div>
+      <h2 class="big">Check your understanding</h2>
+      <p class="kicker">10 quick questions &middot; about 2 minutes. No pass or fail — you'll see what you've got and what to explore next.</p>
+      <div class="qcard" id="quizBox" style="margin-top:18px"></div>
+      <div class="explored">
+        <div class="l">Sections explored</div>
+        <div class="track"><span id="exploredRail" style="width:0%"></span></div>
+        <div style="margin-top:7px;font-size:.82rem;color:var(--muted)" id="exploredPct">0%</div>
+      </div>
+      <div class="sources">
+        <div class="eyebrow" style="color:var(--muted)">Sources &amp; further reading</div>
+        <ol>
+          <li>Google Quantum AI — "Meet Willow, our state-of-the-art quantum chip" (Dec 2024): below-threshold error correction. <a href="https://blog.google/technology/research/google-willow-quantum-chip/" target="_blank" rel="noopener">blog.google</a></li>
+          <li>IBM Quantum roadmap &amp; Nighthawk announcement (2025). <a href="https://www.ibm.com/quantum/blog" target="_blank" rel="noopener">ibm.com/quantum/blog</a></li>
+          <li>NIST — first finalized post-quantum encryption standards, FIPS 203/204/205 (Aug 2024). <a href="https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards" target="_blank" rel="noopener">nist.gov</a></li>
+          <li>"Q-Day" estimates (&asymp;2030&ndash;2035) &amp; NSA CNSA 2.0 timelines. <a href="https://www.nsa.gov/Cybersecurity/Post-Quantum-Cryptography/" target="_blank" rel="noopener">nsa.gov</a></li>
+          <li>Hardware milestones: Quantinuum, IonQ &amp; Microsoft public announcements (2025).</li>
+        </ol>
+      </div>
+      <div class="foot">
+        <div class="sig">Designed &amp; Architected by <b>Krishnamurthy Kandregula</b> &middot; Made by Claude</div>
+        <div class="disclaimer" style="margin-inline:auto">This app is an educational explainer. The field moves quickly and future dates are uncertain scenarios, not predictions — always check a primary source for the latest.</div>
+      </div>
+    </section>
+  </div>
 </section>
-
 </main>
-
-<!-- ============ BOTTOM / SIDE NAV ============ -->
-<nav class="tabs" role="tablist" aria-label="Main">
-  <button class="tab" role="tab" aria-selected="true" data-view="home" onclick="go('home')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v9h5v-5h4v5h5v-9"/></svg>Home</button>
-  <button class="tab" role="tab" aria-selected="false" data-view="learn" onclick="go('learn')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h9a3 3 0 013 3v11a2.5 2.5 0 00-2.5-2.5H4z"/><path d="M20 5h-4a3 3 0 00-3 3v11a2.5 2.5 0 012.5-2.5H20z"/></svg>Learn</button>
-  <button class="tab" role="tab" aria-selected="false" data-view="lab" onclick="go('lab')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"/></svg>Lab</button>
-  <button class="tab" role="tab" aria-selected="false" data-view="future" onclick="go('future')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Future</button>
-  <button class="tab" role="tab" aria-selected="false" data-view="progress" onclick="go('progress')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V9"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M21 20H3"/></svg>Progress</button>
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button class="tab" data-view="home" aria-selected="true" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
+  <button class="tab" data-view="learn" aria-selected="false" onclick="go('learn')"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M12 5v14"/></svg><span>Learn</span></button>
+  <button class="tab" data-view="lab" aria-selected="false" onclick="go('lab')"><svg viewBox="0 0 24 24"><path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/></svg><span>Try</span></button>
+  <button class="tab" data-view="why" aria-selected="false" onclick="go('why')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 4"/><path d="M12 18h.01"/></svg><span>Why</span></button>
+  <button class="tab" data-view="future" aria-selected="false" onclick="go('future')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Future</span></button>
+  <button class="tab" data-view="progress" aria-selected="false" onclick="go('progress')"><svg viewBox="0 0 24 24"><path d="M5 20V9"/><path d="M12 20V4"/><path d="M19 20v-7"/></svg><span>You</span></button>
 </nav>
-
 <script>
-"use strict";
-/* ============================================================
-   QuantumX — single-file PWA
-   Quantum core verified: H→50/50, H+CNOT→Bell (concurrence 1)
-   ============================================================ */
-
-/* ---------- tiny helpers ---------- */
+/* Diagnostic: surface real (same-origin) errors with detail. A bare
+   "Script error." with no message/source below is a cross-origin or
+   in-app-webview error, not from this app. */
+window.addEventListener('error', e=>{
+  if(e.message && e.message!=='Script error.') console.warn('[QuantumX] '+e.message+' @ '+(e.filename||'')+':'+(e.lineno||''));
+});
+window.addEventListener('unhandledrejection', e=>{ console.warn('[QuantumX] promise rejection:', e.reason); });
 const $ = id => document.getElementById(id);
 const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -794,134 +530,61 @@ const store = {
   get(k,d){ try{const v=localStorage.getItem('qx_'+k); return v==null?d:JSON.parse(v);}catch(e){return d;} },
   set(k,v){ try{localStorage.setItem('qx_'+k,JSON.stringify(v));}catch(e){} }
 };
-
-/* ---------- complex + quantum core ---------- */
 const C=(re=0,im=0)=>({re,im});
 const cadd=(a,b)=>C(a.re+b.re,a.im+b.im);
 const cmul=(a,b)=>C(a.re*b.re-a.im*b.im, a.re*b.im+a.im*b.re);
 const cabs2=a=>a.re*a.re+a.im*a.im;
 const S2=Math.SQRT1_2;
-const M = {
-  X:[C(0),C(1),C(1),C(0)],
-  H:[C(S2),C(S2),C(S2),C(-S2)],
-  Z:[C(1),C(0),C(0),C(-1)],
-  T:[C(1),C(0),C(0),C(S2,S2)],
-  S:[C(1),C(0),C(0),C(0,1)],
-};
-/* single-qubit sandbox uses amps a0,a1 */
+const M = { X:[C(0),C(1),C(1),C(0)], H:[C(S2),C(S2),C(S2),C(-S2)], Z:[C(1),C(0),C(0),C(-1)], T:[C(1),C(0),C(0),C(S2,S2)] };
 function applySingle(a0,a1,m){ return [cadd(cmul(m[0],a0),cmul(m[1],a1)), cadd(cmul(m[2],a0),cmul(m[3],a1))]; }
-function blochVec(a0,a1){
-  const x=2*(a0.re*a1.re+a0.im*a1.im);
-  const y=2*(a0.re*a1.im-a0.im*a1.re);
-  const z=cabs2(a0)-cabs2(a1);
-  return [x,y,z];
-}
-/* 2-qubit state-vector (q0 msb): idx=q0*2+q1 */
+function blochVec(a0,a1){ const x=2*(a0.re*a1.re+a0.im*a1.im); const y=2*(a0.re*a1.im-a0.im*a1.re); const z=cabs2(a0)-cabs2(a1); return [x,y,z]; }
 function newState2(){return [C(1),C(),C(),C()];}
-function apply1_2(st,q,m){
-  const out=st.map(x=>C(x.re,x.im)); const bit=q===0?2:1;
-  for(let i=0;i<4;i++) if((i&bit)===0){const j=i|bit,a=st[i],b=st[j];
-    out[i]=cadd(cmul(m[0],a),cmul(m[1],b)); out[j]=cadd(cmul(m[2],a),cmul(m[3],b));}
-  return out;
-}
-function cnot2(st,ctrl,targ){
-  const cb=ctrl===0?2:1, tb=targ===0?2:1; const out=st.map(x=>C(x.re,x.im));
-  for(let i=0;i<4;i++) if(i&cb){const j=i^tb; if(j>i){const t=out[i];out[i]=out[j];out[j]=t;}}
-  return out;
-}
-function concurrence(s){
-  const re=s[0].re*s[3].re - s[0].im*s[3].im - (s[1].re*s[2].re - s[1].im*s[2].im);
-  const im=s[0].re*s[3].im + s[0].im*s[3].re - (s[1].re*s[2].im + s[1].im*s[2].re);
-  return clamp(2*Math.hypot(re,im),0,1);
-}
-
-/* ============================================================
-   BLOCH SPHERE renderer (canvas) — reused by 3 stages
-   ============================================================ */
-function makeBloch(canvasId, onState){
+function apply1_2(st,q,m){ const out=st.map(x=>C(x.re,x.im)); const bit=q===0?2:1;
+  for(let i=0;i<4;i++) if((i&bit)===0){const j=i|bit,a=st[i],b=st[j]; out[i]=cadd(cmul(m[0],a),cmul(m[1],b)); out[j]=cadd(cmul(m[2],a),cmul(m[3],b));}
+  return out; }
+function cnot2(st,ctrl,targ){ const cb=ctrl===0?2:1, tb=targ===0?2:1; const out=st.map(x=>C(x.re,x.im));
+  for(let i=0;i<4;i++) if(i&cb){const j=i^tb; if(j>i){const t=out[i];out[i]=out[j];out[j]=t;}} return out; }
+function concurrence(s){ const re=s[0].re*s[3].re-s[0].im*s[3].im-(s[1].re*s[2].re-s[1].im*s[2].im);
+  const im=s[0].re*s[3].im+s[0].im*s[3].re-(s[1].re*s[2].im+s[1].im*s[2].re); return clamp(2*Math.hypot(re,im),0,1); }
+function makeBloch(canvasId, onState, opts){
   const cv=$(canvasId); if(!cv) return null;
-  const ctx=cv.getContext('2d');
-  const DPR=Math.min(2,window.devicePixelRatio||1);
+  const ctx=cv.getContext('2d'); const DPR=Math.min(2,window.devicePixelRatio||1);
+  const compact=opts&&opts.compact;
   let W=0,H=0,R=0,cx=0,cy=0;
-  function resize(){
-    const rect=cv.getBoundingClientRect(); const w=rect.width||520;
-    W=w; H=w*0.82; cv.width=W*DPR; cv.height=H*DPR;
-    cv.style.height=H+'px'; ctx.setTransform(DPR,0,0,DPR,0,0);
-    R=Math.min(W,H)*0.34; cx=W/2; cy=H/2;
-  }
-  let a0=C(1,0), a1=C(0,0);              // current amplitudes
-  let dispVec=[0,0,1], targetVec=[0,0,1];// animated bloch vector
-  let camPhi=0.6, tilt=-0.42;
+  function resize(){ const rect=cv.getBoundingClientRect(); const w=rect.width||300;
+    W=w; H=compact?w:w*0.82; cv.width=W*DPR; cv.height=H*DPR; cv.style.height=H+'px'; ctx.setTransform(DPR,0,0,DPR,0,0);
+    R=Math.min(W,H)*0.34; cx=W/2; cy=H/2; }
+  let a0=C(1,0), a1=C(0,0);
+  let dispVec=[0,0,1], targetVec=[0,0,1]; let camPhi=0.6, tilt=-0.42;
   const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-  function project([x,y,z]){
-    const cp=Math.cos(camPhi),sp=Math.sin(camPhi);
-    let rx=x*cp-y*sp, ry=x*sp+y*cp, rz=z;
-    const ct=Math.cos(tilt),st=Math.sin(tilt);
-    const ty=ry*ct-rz*st, tz=ry*st+rz*ct;
-    return {sx:cx+R*rx, sy:cy-R*tz, depth:ty};
-  }
-  function ellipse(get){ ctx.beginPath();
-    for(let i=0;i<=64;i++){const t=i/64*Math.PI*2; const p=project(get(t)); if(i===0)ctx.moveTo(p.sx,p.sy); else ctx.lineTo(p.sx,p.sy);} }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    // sphere body
+  function project(p){ const x=p[0],y=p[1],z=p[2]; const cp=Math.cos(camPhi),sp=Math.sin(camPhi); let rx=x*cp-y*sp, ry=x*sp+y*cp, rz=z;
+    const ct=Math.cos(tilt),stt=Math.sin(tilt); const tz=ry*stt+rz*ct; return {sx:cx+R*rx, sy:cy-R*tz}; }
+  function ellipse(get){ ctx.beginPath(); for(let i=0;i<=64;i++){const t=i/64*Math.PI*2; const p=project(get(t)); if(i===0)ctx.moveTo(p.sx,p.sy); else ctx.lineTo(p.sx,p.sy);} }
+  function draw(){ ctx.clearRect(0,0,W,H);
     const g=ctx.createRadialGradient(cx-R*0.3,cy-R*0.4,R*0.2,cx,cy,R*1.15);
     g.addColorStop(0,'rgba(40,54,92,.55)'); g.addColorStop(1,'rgba(12,18,32,.15)');
     ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.fill();
-    ctx.strokeStyle='rgba(126,164,224,.25)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.stroke();
-    // equator + meridians
-    ctx.lineWidth=1;
-    ctx.strokeStyle='rgba(126,164,224,.18)';
-    ellipse(t=>[Math.cos(t),Math.sin(t),0]); ctx.stroke();
-    ctx.strokeStyle='rgba(126,164,224,.10)';
-    ellipse(t=>[Math.cos(t),0,Math.sin(t)]); ctx.stroke();
-    ellipse(t=>[0,Math.cos(t),Math.sin(t)]); ctx.stroke();
-    // poles
+    ctx.strokeStyle='rgba(126,164,224,.25)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.stroke();
+    ctx.strokeStyle='rgba(126,164,224,.18)'; ellipse(t=>[Math.cos(t),Math.sin(t),0]); ctx.stroke();
+    ctx.strokeStyle='rgba(126,164,224,.10)'; ellipse(t=>[Math.cos(t),0,Math.sin(t)]); ctx.stroke(); ellipse(t=>[0,Math.cos(t),Math.sin(t)]); ctx.stroke();
     const north=project([0,0,1]), south=project([0,0,-1]);
-    ctx.fillStyle='#8f9cbd'; ctx.font='600 13px "IBM Plex Mono",monospace';
-    ctx.textAlign='center';
-    ctx.fillText('|0⟩', north.sx, north.sy-10);
-    ctx.fillText('|1⟩', south.sx, south.sy+18);
-
-    // state vector
+    ctx.fillStyle='#8f9cbd'; ctx.font='600 13px "IBM Plex Mono",monospace'; ctx.textAlign='center';
+    ctx.fillText('|0\u27E9', north.sx, north.sy-10); ctx.fillText('|1\u27E9', south.sx, south.sy+18);
     const p=project(dispVec); const o=project([0,0,0]);
-    const grad=ctx.createLinearGradient(o.sx,o.sy,p.sx,p.sy);
-    grad.addColorStop(0,'#38e1d6'); grad.addColorStop(1,'#ff5fa2');
-    ctx.strokeStyle=grad; ctx.lineWidth=3; ctx.lineCap='round';
-    ctx.beginPath(); ctx.moveTo(o.sx,o.sy); ctx.lineTo(p.sx,p.sy); ctx.stroke();
-    // tip glow
+    const grad=ctx.createLinearGradient(o.sx,o.sy,p.sx,p.sy); grad.addColorStop(0,'#38e1d6'); grad.addColorStop(1,'#ff5fa2');
+    ctx.strokeStyle=grad; ctx.lineWidth=3; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(o.sx,o.sy); ctx.lineTo(p.sx,p.sy); ctx.stroke();
     ctx.beginPath(); ctx.fillStyle='#fff'; ctx.arc(p.sx,p.sy,5,0,7); ctx.fill();
     ctx.beginPath(); ctx.fillStyle='rgba(255,95,162,.35)'; ctx.arc(p.sx,p.sy,10,0,7); ctx.fill();
-    // shadow on floor
     const fl=project([dispVec[0],dispVec[1],-1]);
-    ctx.strokeStyle='rgba(126,164,224,.25)'; ctx.setLineDash([3,4]); ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(p.sx,p.sy); ctx.lineTo(fl.sx,fl.sy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle='rgba(126,164,224,.25)'; ctx.setLineDash([3,4]); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(p.sx,p.sy); ctx.lineTo(fl.sx,fl.sy); ctx.stroke(); ctx.setLineDash([]);
   }
-  function tick(){
-    let moved=false;
+  function tick(){ let moved=false;
     for(let i=0;i<3;i++){ const d=targetVec[i]-dispVec[i]; if(Math.abs(d)>0.001){dispVec[i]+=d*(reduce?1:0.18); moved=true;} else dispVec[i]=targetVec[i]; }
-    draw();
-    if(moved) requestAnimationFrame(tick);
-  }
-  function setState(na0,na1,announce=true){
-    a0=na0; a1=na1; targetVec=blochVec(a0,a1);
-    if(reduce) dispVec=targetVec.slice();
-    requestAnimationFrame(tick);
-    if(onState&&announce) onState({a0,a1,p0:cabs2(a0),p1:cabs2(a1)});
-  }
-  function gate(name){
-    if(name==='MEASURE'){
-      const p0=cabs2(a0); const r=Math.random();
-      if(r<p0) setState(C(1,0),C(0,0)); else setState(C(0,0),C(1,0));
-      return true;
-    }
-    if(name==='RESET'){ setState(C(1,0),C(0,0)); return; }
-    const [n0,n1]=applySingle(a0,a1,M[name]); setState(n0,n1);
-  }
-  // drag to rotate camera
+    draw(); if(moved) requestAnimationFrame(tick); }
+  function setState(na0,na1,announce=true){ a0=na0; a1=na1; targetVec=blochVec(a0,a1); if(reduce) dispVec=targetVec.slice(); requestAnimationFrame(tick);
+    if(onState&&announce) onState({a0,a1,p0:cabs2(a0),p1:cabs2(a1)}); }
+  function gate(name){ if(name==='MEASURE'){ const p0=cabs2(a0); const r=Math.random(); if(r<p0) setState(C(1,0),C(0,0)); else setState(C(0,0),C(1,0)); return true; }
+    if(name==='RESET'){ setState(C(1,0),C(0,0)); return; } const nn=applySingle(a0,a1,M[name]); setState(nn[0],nn[1]); }
   let drag=false,lastX=0;
   const down=e=>{drag=true; lastX=(e.touches?e.touches[0].clientX:e.clientX);};
   const move=e=>{ if(!drag)return; const x=(e.touches?e.touches[0].clientX:e.clientX); camPhi+=(x-lastX)*0.01; lastX=x; draw(); if(e.cancelable)e.preventDefault();};
@@ -930,474 +593,347 @@ function makeBloch(canvasId, onState){
   window.addEventListener('mousemove',move); cv.addEventListener('touchmove',move,{passive:false});
   window.addEventListener('mouseup',up); window.addEventListener('touchend',up);
   window.addEventListener('resize',()=>{resize();draw();});
-  resize(); draw();
-  if(onState) onState({a0,a1,p0:1,p1:0});
+  resize(); draw(); if(onState) onState({a0,a1,p0:1,p1:0});
   return {gate, setState, redraw:()=>{resize();draw();}, get:()=>({a0,a1})};
 }
-
-/* ---------- gate buttons ---------- */
-const GATE_INFO=[
-  ['H','superposition'],['X','flip'],['Z','phase'],['T','⅛ phase'],['MEASURE','collapse'],['RESET','to |0⟩']
-];
-function buildGateRow(containerId, bloch, noteEl, noteFn){
-  const c=$(containerId); if(!c) return;
-  GATE_INFO.forEach(([g,desc])=>{
-    const b=el('button','gbtn'); 
-    b.innerHTML = g==='MEASURE'?'◉<small>measure</small>' : g==='RESET'?'⟲<small>reset</small>' : g+'<small>'+desc+'</small>';
-    b.setAttribute('aria-label', g+' — '+desc);
+function buildGateRow(containerId, bloch, noteFn, gates){
+  const c=$(containerId); if(!c) return; c.innerHTML='';
+  (gates||[['H','superposition'],['X','flip'],['Z','phase'],['T','1/8 phase'],['MEASURE','measure'],['RESET','reset']]).forEach(pair=>{
+    const g=pair[0], desc=pair[1]; const b=el('button','gbtn');
+    b.innerHTML = g==='MEASURE'?'\u25C9<small>'+desc+'</small>' : g==='RESET'?'\u27F2<small>'+desc+'</small>' : g+'<small>'+desc+'</small>';
+    b.setAttribute('aria-label', g+' \u2014 '+desc);
     b.onclick=()=>{ const wasMeasure=bloch.gate(g); if(noteFn) noteFn(g,wasMeasure); };
     c.appendChild(b);
   });
 }
-function stateSentence(p0,p1,g,measured){
-  const pc0=Math.round(p0*100), pc1=Math.round(p1*100);
-  if(measured) return 'Measured! It collapsed to a definite <b>'+(p0>0.5?'0':'1')+'</b>. A quantum measurement always returns an ordinary bit — and the superposition is gone.';
-  if(pc0===100) return 'A definite <b>0</b>. Apply <b class="mono">H</b> for superposition.';
-  if(pc1===100) return 'A definite <b>1</b>.';
-  if(pc0===50) return 'Equal superposition — <b>'+pc0+'%</b> chance of 0, <b>'+pc1+'%</b> chance of 1. Adding <b class="mono">Z</b> or <b class="mono">T</b> changes the hidden <i>phase</i> without changing these odds — that phase is what algorithms exploit through interference.';
-  return 'Superposition: <b>'+pc0+'%</b> chance of 0, <b>'+pc1+'%</b> chance of 1 on measurement.';
-}
-
-/* ============================================================
-   HERO / LEARN / LAB single-qubit stages
-   ============================================================ */
-let heroB, learnB, labB;
-function initStages(){
-  heroB=makeBloch('heroBloch', s=>{ setPB('hp0','hb0','hp1','hb1',s.p0,s.p1); });
-  buildGateRow('heroGates', heroB, null, (g,m)=>{ const {a0,a1}=heroB.get(); $('heroNote').innerHTML=stateSentence(cabs2(a0),cabs2(a1),g,m); });
-  learnB=makeBloch('learnBloch', s=>{ setPB('lp0','lb0','lp1','lb1',s.p0,s.p1); });
-  buildGateRow('learnGates', learnB, null, (g,m)=>{ const {a0,a1}=learnB.get(); $('learnNote').innerHTML=stateSentence(cabs2(a0),cabs2(a1),g,m); });
-  $('learnNote').innerHTML=stateSentence(1,0);
-  labB=makeBloch('labBloch', s=>{ setPB('qp0','qb0','qp1','qb1',s.p0,s.p1); });
-  buildGateRow('labGates', labB, null, (g,m)=>{ const {a0,a1}=labB.get(); $('labNote').innerHTML=stateSentence(cabs2(a0),cabs2(a1),g,m); });
-  $('labNote').innerHTML=stateSentence(1,0);
-}
-function setPB(id0,ib0,id1,ib1,p0,p1){
+function pctNote(p0,p1,g,measured){
   const a=Math.round(p0*100), b=100-a;
-  $(id0).textContent=a+'%'; $(id1).textContent=b+'%';
-  $(ib0).style.width=a+'%'; $(ib1).style.width=b+'%';
-  if(id0==='hp0'){/*hero also feeds nothing else*/}
+  if(measured) return 'Measured! It collapsed to a definite <b>'+(p0>0.5?'0':'1')+'</b>. Measuring always gives a plain 0 or 1 \u2014 and the superposition is gone.';
+  if(a===100) return 'A definite <b>0</b>. Tap <b class="mono">H</b> to create superposition.';
+  if(b===100) return 'A definite <b>1</b>.';
+  if(a===50) return 'Equal superposition \u2014 a <b>50/50</b> chance of 0 or 1 when measured.';
+  return 'Superposition \u2014 about <b>'+a+'%</b> chance of 0, <b>'+b+'%</b> chance of 1.';
 }
-
-/* classical bit switch */
-function toggleBit(){ const b=$('bitSwitch'); const on=b.textContent.trim()==='1';
-  b.textContent=on?'0':'1'; b.style.color=on?'var(--zero)':'var(--one)'; b.style.borderColor=on?'var(--zero)':'var(--one)';
+let level = store.get('level','beginner');
+function setLevel(l){ level=l; store.set('level',l); document.body.dataset.level=l;
+  document.querySelectorAll('#levelCtl button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.lvl===l)));
+  document.querySelectorAll('#levelPick .lp').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.lvl===l)));
 }
-
-/* ============================================================
-   CIRCUIT BUILDER (2-qubit)
-   ============================================================ */
+const STEPS = [
+  {key:'qubit', build:stepQubit},
+  {key:'vs',    build:stepVs},
+  {key:'super', build:stepSuper},
+  {key:'entangle', build:stepEntangle},
+  {key:'try',   build:stepTry},
+  {key:'why',   build:stepWhy},
+  {key:'future',build:stepFuture},
+];
+let jIdx = store.get('jIdx',0);
+let jBuilt = false;
+function buildJourney(){
+  const host=$('journeyHost'); host.innerHTML='';
+  STEPS.forEach((s,i)=>{ const sec=el('section','jstep'); sec.id='jstep-'+i; sec.dataset.i=i; sec.innerHTML=s.build(i); host.appendChild(sec); });
+  const dots=$('jdots'); dots.innerHTML=''; STEPS.forEach(()=>dots.appendChild(el('i')));
+  jBuilt=true;
+  initQubitWidget(); initSuperWidget();
+}
+function showStep(i){
+  jIdx=clamp(i,0,STEPS.length-1); store.set('jIdx',jIdx);
+  document.querySelectorAll('.jstep').forEach(s=>s.classList.toggle('active', +s.dataset.i===jIdx));
+  const dots=Array.from($('jdots').children);
+  dots.forEach((d,k)=>{ d.className=''; if(k<jIdx)d.classList.add('done'); if(k===jIdx)d.classList.add('now'); });
+  $('jstepLabel').textContent='Step '+(jIdx+1)+' / '+STEPS.length;
+  window.scrollTo({top:0,behavior:'instant' in window?'instant':'auto'});
+  if(STEPS[jIdx].key==='qubit') qubitB&&qubitB.redraw();
+  if(STEPS[jIdx].key==='super') superB&&superB.redraw();
+}
+function jNext(){ if(jIdx<STEPS.length-1) showStep(jIdx+1); else go('progress'); }
+function jBack(){ showStep(jIdx-1); }
+function startJourney(){ go('learn'); showStep(0); }
+function navBtns(i){ const last=i===STEPS.length-1;
+  return '<div class="jnav">'+ (i>0?'<button class="btn ghost" onclick="jBack()">\u2190 Back</button>':'<span></span>')+
+    '<button class="btn primary" onclick="jNext()">'+(last?'Finish \u2192 test yourself':'Next \u2192')+'</button></div>'; }
+function stepQubit(i){ return `
+  <div class="eyebrow">Step 1 &middot; The building block</div>
+  <h2>What is a qubit?</h2>
+  <p class="jsimple">A normal computer stores a <span class="hl">bit</span>: it's either <b>0</b> or <b>1</b>, like a light switch that's off or on. A quantum computer uses a <span class="hl">qubit</span>. Before you look at it, a qubit can hold a blend of 0 and 1 at once — and only becomes a plain 0 or 1 when you <b>measure</b> it.</p>
+  <div class="analogy">&#127898; <b>Think of a dial, not a switch.</b> A switch is only off or on. A dial can point anywhere in between — and where it points sets how likely you are to get 0 or 1 when you finally read it.</div>
+  <div class="tryinline">
+    <div class="cap">Try it — this sphere is one qubit</div>
+    <div class="stage"><canvas id="qubitBloch" width="520" height="420"></canvas><div class="hint">drag to rotate</div></div>
+    <div class="readout">
+      <div class="pcard z"><div class="lab">Chance of 0</div><div class="val" id="jq0">100%</div><div class="pbar"><span id="jb0" style="width:100%"></span></div></div>
+      <div class="pcard o"><div class="lab">Chance of 1</div><div class="val" id="jq1">0%</div><div class="pbar"><span id="jb1" style="width:0%"></span></div></div>
+    </div>
+    <div class="gaterow" id="qubitGates"></div>
+    <div class="state-note" id="qubitNote">Right now the dial points straight up — a sure <b>0</b>. Tap <b class="mono">H</b> to tilt it into a mix.</div>
+  </div>
+  <details class="more"><summary>Learn more: the technical name</summary><div class="inner">The tilt of this arrow is the qubit's <b>quantum state</b>, drawn on what physicists call a <b>Bloch sphere</b>. The north pole is |0&rang;, the south pole is |1&rang;, and the <b class="mono">H</b> (Hadamard) gate puts a qubit into an equal mix of the two.</div></details>
+  `+navBtns(i); }
+function stepVs(i){ return `
+  <div class="eyebrow">Step 2 &middot; The difference</div>
+  <h2>How is it different from a normal bit?</h2>
+  <p class="jsimple">A bit is one definite value. A qubit holds a range of <span class="hl">possibilities</span> until measured — and qubits can be linked together in ways bits can't. That's the whole source of quantum computing's power.</p>
+  <table class="cmp">
+    <thead><tr><th>&nbsp;</th><th>Normal computer</th><th>Quantum computer</th></tr></thead>
+    <tbody>
+      <tr><td>Unit of info</td><td>Bit</td><td class="q">Qubit</td></tr>
+      <tr><td>Possible values</td><td>0 or 1</td><td class="q">a blend of 0 and 1 until measured</td></tr>
+      <tr><td>Reading it</td><td>just read it</td><td class="q">measuring forces a 0 or 1</td></tr>
+      <tr><td>Best at</td><td>everyday general tasks</td><td class="q">a few special problems</td></tr>
+    </tbody>
+  </table>
+  <div class="takeaway"><b>Important:</b> Quantum does <b>not</b> automatically mean faster. Quantum computers are built for <i>specific</i> problems — not to replace your laptop.</div>
+  <details class="more lvl-exp"><summary>Learn more: why "possibilities" isn't cheating</summary><div class="inner">A qubit isn't secretly 0 and 1 at once in a classical sense. Its state assigns an <b>amplitude</b> to each outcome; those amplitudes set the probabilities you see on measurement, and they can add or cancel (interference) — which is how quantum algorithms steer toward the right answer.</div></details>
+  `+navBtns(i); }
+function stepSuper(i){ return `
+  <div class="eyebrow">Step 3 &middot; The strange part</div>
+  <h2>What is superposition?</h2>
+  <p class="jsimple">Superposition means a qubit can be in a <span class="hl">combination of 0 and 1</span> before we measure it. The quantum state decides the odds — and every time you measure, you get one real answer, at random, following those odds.</p>
+  <div class="tryinline">
+    <div class="cap">Experiment — put it in superposition, then measure many times</div>
+    <div class="stage"><canvas id="superBloch" width="520" height="420"></canvas></div>
+    <div class="gaterow" id="superGates"></div>
+    <div class="tally">
+      <div class="tcard z"><div class="n" id="tally0">0</div><div class="k">times got 0</div></div>
+      <div class="tcard o"><div class="n" id="tally1">0</div><div class="k">times got 1</div></div>
+    </div>
+    <div class="state-note" id="superNote">Step 1: tap <b class="mono">H</b> to enter superposition (50/50). Step 2: tap <b>Measure</b> a few times and watch the tally.</div>
+  </div>
+  <p class="jsimple" style="margin-top:16px;font-size:1rem;color:var(--muted)">Notice: each measurement is random, but over many tries it settles near <b>50/50</b>. And once measured, the qubit is stuck on that value — the superposition is gone until you reset.</p>
+  <details class="more"><summary>Learn more: the common myth</summary><div class="inner">It's tempting to say a qubit "is 0 and 1 at the same time." A safer way to say it: the qubit's <b>state</b> sets the probabilities of 0 and 1 that we observe on measurement. It isn't two classical values secretly stored side by side.</div></details>
+  `+navBtns(i); }
+function stepEntangle(i){ return `
+  <div class="eyebrow">Step 4 &middot; The spooky part</div>
+  <h2>What is entanglement?</h2>
+  <p class="jsimple">Two qubits can be joined into one shared quantum state, so their results are <span class="hl">linked</span>. Each single result is still random — but the two always come out related. Let's watch it.</p>
+  <div class="tryinline">
+    <div class="cap">Experiment — entangle two qubits, measure 200 times</div>
+    <button class="btn primary big" id="entRunBtn" onclick="entRun()" style="width:100%;justify-content:center">Entangle &amp; measure 200 times</button>
+    <div class="mini-shots" id="entShots"></div>
+    <div class="punch" id="entPunch" style="display:none"></div>
+  </div>
+  <p class="jsimple" style="margin-top:16px;font-size:1rem;color:var(--muted)">The individual result is unpredictable, but the two results are <b>strongly correlated</b> — they always agree. Nothing in a classical world does this.</p>
+  <details class="more lvl-exp"><summary>Learn more: what "always agree" means here</summary><div class="inner">This is the <b>Bell state</b>. Measuring the first qubit instantly fixes what the second will be, no matter the distance. It doesn't send a usable signal faster than light — but the correlation is real, and it's the backbone of quantum computing and quantum cryptography.</div></details>
+  `+navBtns(i); }
+function stepTry(i){ return `
+  <div class="eyebrow">Step 5 &middot; Your turn</div>
+  <h2>Build your own quantum circuit</h2>
+  <p class="jsimple">You've seen the ideas — now play. The full lab lets you place gates on two qubits, read the prediction, and run real measurements. Try re-creating entanglement yourself: place an <b class="mono">H</b>, then a <b class="mono">CNOT</b>.</p>
+  <div class="tryinline" style="text-align:center">
+    <div style="font-size:2.4rem">&#129514;</div>
+    <p class="kicker" style="margin:8px auto 16px">The simulator is the heart of QuantumX — everything there is computed for real, not scripted.</p>
+    <button class="btn primary big" onclick="go('lab')">Open the full lab &rarr;</button>
+  </div>
+  `+navBtns(i); }
+function stepWhy(i){ return `
+  <div class="eyebrow">Step 6 &middot; Why it matters</div>
+  <h2>Where can quantum help?</h2>
+  <p class="jsimple">Not everywhere — and that's the honest, important part. Quantum computers target a <span class="hl">few specific</span> problems.</p>
+  <div class="grid c2" style="margin-top:16px">
+    <div class="why-card"><div class="ic">&#128274;</div><h3>Security</h3><p>Could threaten some of today's encryption — so the world is already adopting quantum-safe standards.</p></div>
+    <div class="why-card"><div class="ic">&#129516;</div><h3>Science</h3><p>May simulate molecules and materials to help design drugs and batteries.</p></div>
+    <div class="why-card"><div class="ic">&#128506;&#65039;</div><h3>Optimization</h3><p>Some huge "best option" problems in logistics and finance may benefit.</p></div>
+    <div class="why-card"><div class="ic">&#129302;</div><h3>AI</h3><p>An active research area — but quantum is <b>not</b> replacing today's AI chips.</p></div>
+  </div>
+  <div class="takeaway" style="margin-top:16px"><b>Key idea:</b> quantum is a specialized tool, not a universal speed boost.</div>
+  <p class="kicker" style="margin-top:14px"><button class="btn ghost" onclick="go('why')">See more real examples &rarr;</button></p>
+  `+navBtns(i); }
+function stepFuture(i){ return `
+  <div class="eyebrow">Step 7 &middot; What's next</div>
+  <h2>What might the future look like?</h2>
+  <p class="jsimple">Quantum computing is early. Progress is real but hard to time. Think in <span class="hl">scenarios</span>, and trust them less the further out they go.</p>
+  <div class="tl" style="margin-top:16px">
+    <div class="row"><div class="dot" style="background:var(--good)"></div><div><div class="when">Today</div><h4>Early machines &amp; research</h4><p>Small, error-prone, improving fast.</p></div></div>
+    <div class="row"><div class="dot" style="background:var(--plaus)"></div><div><div class="when">2026&ndash;2030</div><h4>Better hardware &amp; error correction</h4><p>First genuinely useful demonstrations.</p></div></div>
+    <div class="row"><div class="dot" style="background:var(--dep)"></div><div><div class="when">2030&ndash;2035</div><h4>Possible early advantage</h4><p>Chemistry first; encryption risk comes into view.</p></div></div>
+    <div class="row"><div class="dot" style="background:var(--spec)"></div><div><div class="when">2035&ndash;2040+</div><h4>Potential fault-tolerant systems</h4><p>The big prize — and the least certain.</p></div></div>
+  </div>
+  <p class="kicker" style="margin-top:14px">You've got the whole picture now — a qubit, superposition, entanglement, why it's different, and where it's going. <b style="color:var(--ink)">Nice work.</b></p>
+  <p class="kicker" style="margin-top:8px"><button class="btn ghost" onclick="go('future')">Explore the detailed timeline &rarr;</button></p>
+  `+navBtns(i); }
+let qubitB=null, superB=null;
+function initQubitWidget(){
+  qubitB=makeBloch('qubitBloch', s=>{ const a=Math.round(s.p0*100); $('jq0').textContent=a+'%'; $('jq1').textContent=(100-a)+'%'; $('jb0').style.width=a+'%'; $('jb1').style.width=(100-a)+'%'; });
+  buildGateRow('qubitGates', qubitB, (g,m)=>{ const q=qubitB.get(); $('qubitNote').innerHTML=pctNote(cabs2(q.a0),cabs2(q.a1),g,m); },
+    [['H','superposition'],['X','flip to 1'],['MEASURE','measure'],['RESET','reset']]);
+}
+let superTally={z:0,o:0};
+function initSuperWidget(){
+  superB=makeBloch('superBloch', null);
+  buildGateRow('superGates', superB, (g,m)=>{
+    if(g==='RESET'){ superTally={z:0,o:0}; $('tally0').textContent='0'; $('tally1').textContent='0'; $('superNote').innerHTML='Reset. Tap <b class="mono">H</b> for superposition, then <b>Measure</b> repeatedly.'; return; }
+    if(m){ const q=superB.get(); const got0=cabs2(q.a0)>0.5; if(got0)superTally.z++; else superTally.o++;
+      $('tally0').textContent=superTally.z; $('tally1').textContent=superTally.o; const tot=superTally.z+superTally.o;
+      $('superNote').innerHTML='Got a <b>'+(got0?'0':'1')+'</b>. After <b>'+tot+'</b> measurements: '+superTally.z+' zeros, '+superTally.o+' ones. Keep going — it drifts toward 50/50. (Tap <b class="mono">reset</b> to re-enter superposition.)'; return; }
+    const q=superB.get(); const p0=cabs2(q.a0);
+    $('superNote').innerHTML = (p0>0.499&&p0<0.501) ? 'Now in equal superposition — <b>50/50</b>. Tap <b>Measure</b> several times and watch the tally.' : pctNote(p0,cabs2(q.a1),g,m);
+  }, [['H','superposition'],['MEASURE','measure'],['RESET','reset']]);
+}
+function entRun(){
+  let st=newState2(); st=apply1_2(st,0,M.H); st=cnot2(st,0,1);
+  const kets=['00','01','10','11']; const counts={'00':0,'01':0,'10':0,'11':0};
+  const cum=[]; let acc=0; st.forEach(a=>{acc+=cabs2(a);cum.push(acc);});
+  for(let s=0;s<200;s++){ const r=Math.random(); let idx=cum.findIndex(c=>r<=c); if(idx<0)idx=3; counts[kets[idx]]++; }
+  const host=$('entShots'); host.innerHTML=''; const max=Math.max(1,counts['00'],counts['01'],counts['10'],counts['11']);
+  kets.forEach(k=>{ const ones=(k.match(/1/g)||[]).length; const color=ones===0?'var(--zero)':ones===2?'var(--one)':'linear-gradient(180deg,var(--zero),var(--one))';
+    const col=el('div','col'); const h=Math.round(counts[k]/max*95)+3;
+    col.innerHTML='<div class="cnt">'+counts[k]+'</div><div class="bar" style="height:'+h+'px;background:'+color+'"></div><div class="k">|'+k+'\u27E9</div>'; host.appendChild(col); });
+  const p=$('entPunch'); p.style.display='block';
+  p.innerHTML='<span class="hl">&#128064; See it?</span> You got <code>|00&rang;</code> and <code>|11&rang;</code>, but only <b>'+(counts['01']+counts['10'])+'</b> times out of 200 did you ever get <code>|01&rang;</code> or <code>|10&rang;</code>. The two qubits <b>always agreed</b> — even though each result was random. <b>That is entanglement.</b>';
+  $('entRunBtn').textContent='Run again';
+}
+let labB=null;
+function initLab(){
+  labB=makeBloch('labBloch', s=>{ const a=Math.round(s.p0*100); $('qp0').textContent=a+'%'; $('qp1').textContent=(100-a)+'%'; $('qb0').style.width=a+'%'; $('qb1').style.width=(100-a)+'%'; });
+  buildGateRow('labGates', labB, (g,m)=>{ const q=labB.get(); $('labNote').innerHTML=pctNote(cabs2(q.a0),cabs2(q.a1),g,m); });
+  $('labNote').innerHTML=pctNote(1,0);
+}
 const COLS=6;
 let circuit={ q0:new Array(COLS).fill(null), q1:new Array(COLS).fill(null), measure:{q0:true,q1:true} };
-// cell value: 'H'|'X'|'Z'|'T' or {cnot:'ctrl'|'targ', partner:otherWire}
-let selGate=null;
-const CGATES=['H','X','Z','T','CNOT'];
-
-function buildPalette(){
-  const p=$('palette');
-  CGATES.forEach(g=>{
-    const b=el('button', g==='CNOT'?'pgate wide':'pgate', g==='CNOT'?'CNOT':g);
-    b.setAttribute('aria-pressed','false');
-    b.onclick=()=>{ selGate = (selGate===g)?null:g; refreshPaletteSel(); 
-      $('selNote').textContent = selGate? ('Selected '+selGate+' — tap a slot to place. Tap again to deselect.') : 'Nothing selected.'; };
-    b.dataset.g=g; p.appendChild(b);
-  });
-}
+let selGate=null; const CGATES=['H','X','Z','T','CNOT'];
+function buildPalette(){ const p=$('palette');
+  CGATES.forEach(g=>{ const b=el('button', g==='CNOT'?'pgate wide':'pgate', g==='CNOT'?'CNOT':g); b.setAttribute('aria-pressed','false');
+    b.onclick=()=>{ selGate=(selGate===g)?null:g; refreshPaletteSel(); $('selNote').textContent = selGate?('Selected '+selGate+' — tap a slot to place. Tap it again to deselect.'):'Nothing selected.'; };
+    b.dataset.g=g; p.appendChild(b); }); }
 function refreshPaletteSel(){ document.querySelectorAll('#palette .pgate').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.g===selGate))); }
-
-function renderWires(){
-  const host=$('wires'); host.innerHTML='';
-  ['q0','q1'].forEach(w=>{
-    const row=el('div','wire');
-    row.appendChild(el('div','lbl','|'+w[1]+'⟩'));
-    const slots=el('div','slots');
-    for(let col=0;col<COLS;col++){
-      const slot=el('div','slot');
-      const cell=circuit[w][col];
-      const btn=el('button');
-      if(cell==null){ btn.textContent='+'; }
-      else if(typeof cell==='string'){ btn.textContent=cell; btn.className='filled'; }
-      else if(cell.cnot==='ctrl'){ btn.textContent='●'; btn.className='filled ctrl'; }
-      else if(cell.cnot==='targ'){ btn.textContent='⊕'; btn.className='filled targ'; }
-      btn.onclick=()=>placeAt(w,col);
-      slot.appendChild(btn);
-      // vertical link for cnot column
+function renderWires(){ const host=$('wires'); host.innerHTML='';
+  ['q0','q1'].forEach(w=>{ const row=el('div','wire'); row.appendChild(el('div','lbl','|'+w[1]+'\u27E9')); const slots=el('div','slots');
+    for(let col=0;col<COLS;col++){ const slot=el('div','slot'); const cell=circuit[w][col]; const btn=el('button');
+      if(cell==null){ btn.textContent='+'; } else if(typeof cell==='string'){ btn.textContent=cell; btn.className='filled'; }
+      else if(cell.cnot==='ctrl'){ btn.textContent='\u25CF'; btn.className='filled ctrl'; } else if(cell.cnot==='targ'){ btn.textContent='\u2295'; btn.className='filled targ'; }
+      btn.onclick=()=>placeAt(w,col); slot.appendChild(btn);
       const c0=circuit.q0[col], c1=circuit.q1[col];
-      if(c0&&c1&&typeof c0==='object'&&typeof c1==='object' && w==='q0'){
-        const link=el('div','vlink'); link.style.top='50%'; link.style.height='66px'; slot.appendChild(link);
-      }
-      slots.appendChild(slot);
-    }
-    // measure toggle
-    const mc=el('div','measure-cell');
-    const mb=el('button','mbtn','◉<span>meas</span>'); mb.setAttribute('aria-pressed',String(circuit.measure[w]));
-    mb.onclick=()=>{ circuit.measure[w]=!circuit.measure[w]; renderWires(); computeCircuit(); };
-    mc.appendChild(mb); slots.appendChild(mc);
-    row.appendChild(slots); host.appendChild(row);
-  });
-}
-function placeAt(w,col){
-  const cur=circuit[w][col];
-  if(cur!=null){ // remove (and partner if cnot)
-    if(typeof cur==='object'){ circuit.q0[col]=null; circuit.q1[col]=null; }
-    else circuit[w][col]=null;
-    renderWires(); computeCircuit(); return;
-  }
-  if(!selGate){ $('selNote').textContent='Select a gate above first, then tap a slot.'; return; }
-  if(selGate==='CNOT'){
-    const other = w==='q0'?'q1':'q0';
-    circuit[w][col]={cnot:'ctrl',partner:other};
-    circuit[other][col]={cnot:'targ',partner:w};
-  } else {
-    // if column occupied by cnot on other wire, block
-    circuit[w][col]=selGate;
-  }
-  renderWires(); computeCircuit();
-}
+      if(c0&&c1&&typeof c0==='object'&&typeof c1==='object' && w==='q0'){ const link=el('div','vlink'); link.style.top='50%'; link.style.height='66px'; slot.appendChild(link); }
+      slots.appendChild(slot); }
+    const mc=el('div','measure-cell'); const mb=el('button','mbtn','\u25C9<span>meas</span>'); mb.setAttribute('aria-pressed',String(circuit.measure[w]));
+    mb.onclick=()=>{ circuit.measure[w]=!circuit.measure[w]; renderWires(); computeCircuit(); }; mc.appendChild(mb); slots.appendChild(mc);
+    row.appendChild(slots); host.appendChild(row); }); }
+function placeAt(w,col){ const cur=circuit[w][col];
+  if(cur!=null){ if(typeof cur==='object'){ circuit.q0[col]=null; circuit.q1[col]=null; } else circuit[w][col]=null; renderWires(); computeCircuit(); return; }
+  if(!selGate){ $('selNote').textContent='Pick a gate above first, then tap a slot.'; return; }
+  if(selGate==='CNOT'){ const other=w==='q0'?'q1':'q0'; circuit[w][col]={cnot:'ctrl',partner:other}; circuit[other][col]={cnot:'targ',partner:w}; }
+  else { circuit[w][col]=selGate; } renderWires(); computeCircuit(); }
 function clearCircuit(){ circuit={q0:new Array(COLS).fill(null),q1:new Array(COLS).fill(null),measure:{q0:true,q1:true}}; selGate=null; refreshPaletteSel(); $('selNote').textContent='Cleared.'; renderWires(); computeCircuit(); }
-function loadPreset(p){
-  clearCircuit();
-  if(p==='bell'){ circuit.q0[0]='H'; circuit.q0[1]={cnot:'ctrl',partner:'q1'}; circuit.q1[1]={cnot:'targ',partner:'q0'}; $('selNote').textContent='Bell state loaded — H then CNOT. Watch entanglement appear.'; }
-  if(p==='super'){ circuit.q0[0]='H'; circuit.q1[0]='H'; $('selNote').textContent='Both qubits in superposition — four equally likely outcomes, but no entanglement.'; }
-  renderWires(); computeCircuit();
-}
-function computeCircuit(){
-  let st=newState2();
-  for(let col=0;col<COLS;col++){
-    const c0=circuit.q0[col], c1=circuit.q1[col];
-    if(c0&&typeof c0==='object'){ // cnot in this column
-      const ctrl = c0.cnot==='ctrl'?'q0':'q1';
-      const targ = ctrl==='q0'?'q1':'q0';
-      st=cnot2(st, ctrl==='q0'?0:1, targ==='q0'?0:1);
-    } else {
-      if(typeof c0==='string') st=apply1_2(st,0,M[c0]);
-      if(typeof c1==='string') st=apply1_2(st,1,M[c1]);
-    }
-  }
-  renderAmps(st);
-  const conc=concurrence(st);
-  const eb=$('entBox');
-  if(conc>0.02){ eb.className='ent yes'; eb.innerHTML='<b>Entangled.</b> Concurrence '+conc.toFixed(2)+'/1.00 — the two qubits share one joint state that can\'t be described separately. Measuring one instantly determines the other.'; }
-  else { eb.className='ent no'; eb.innerHTML='<b style="color:var(--muted)">Not entangled.</b> This state is separable — each qubit has its own independent description.'; }
-  window._lastState=st;
-}
-function renderAmps(st){
-  const host=$('ampList'); host.innerHTML='';
-  const kets=['00','01','10','11'];
-  st.forEach((amp,i)=>{
-    const p=cabs2(amp);
-    const ones=(kets[i].match(/1/g)||[]).length; // 0,1,2
-    const color = ones===0?'var(--zero)': ones===2?'var(--one)':'linear-gradient(90deg,var(--zero),var(--one))';
-    const row=el('div','amp');
-    row.innerHTML='<span class="ket">|'+kets[i]+'⟩</span><span class="abar"><span style="width:'+(p*100).toFixed(0)+'%;background:'+color+'"></span></span><span class="pct">'+(p*100).toFixed(0)+'%</span>';
-    host.appendChild(row);
-  });
-}
-function runShots(){
-  const st=window._lastState||newState2();
-  const N=200; const counts={'00':0,'01':0,'10':0,'11':0};
-  const cum=[]; let acc=0; st.forEach(a=>{acc+=cabs2(a); cum.push(acc);});
-  const kets=['00','01','10','11'];
-  for(let s=0;s<N;s++){ const r=Math.random(); let idx=cum.findIndex(c=>r<=c); if(idx<0)idx=3;
-    let k=kets[idx].split('');
-    if(!circuit.measure.q0) k[0]='·'; if(!circuit.measure.q1) k[1]='·';
-    counts[kets[idx]]++;
-  }
-  const host=$('shotsBox'); host.innerHTML='';
-  const max=Math.max(1,...Object.values(counts));
-  kets.forEach(k=>{
-    const ones=(k.match(/1/g)||[]).length;
-    const color= ones===0?'var(--zero)': ones===2?'var(--one)':'linear-gradient(180deg,var(--zero),var(--one))';
-    const col=el('div','col');
-    const h=Math.round(counts[k]/max*90)+2;
-    col.innerHTML='<div style="font-size:.7rem;color:var(--muted);font-family:\'IBM Plex Mono\'">'+counts[k]+'</div><div class="bar" style="height:'+h+'px;background:'+color+'"></div><div class="k">|'+k+'⟩</div>';
-    host.appendChild(col);
-  });
-  $('shotsNote').innerHTML='200 measurements sampled. Outcomes follow the amplitudes² — and re-running gives slightly different counts, because measurement is genuinely random.';
-}
-
-/* ============================================================
-   CONTENT DATA
-   ============================================================ */
-const MYTHS=[
-  ['Quantum computers will replace today\'s computers.','Quantum machines are expected to complement classical computing for specialized workloads — not run your email or browser.'],
-  ['More qubits automatically means a better computer.','Useful performance also depends on error rates, qubit connectivity, circuit depth and error correction — not raw qubit count.'],
-  ['Quantum will make AI instantly 1000× faster.','Quantum machine learning is an active research area. Broad, proven advantages over GPUs are not established today.'],
-  ['A quantum computer already broke encryption.','No. Breaking RSA-2048 needs a large fault-tolerant machine with millions of physical qubits — well beyond current hardware.'],
-];
-const STACK=[
-  ['Applications','What you actually want done: simulate a molecule, optimize a portfolio, factor a number.'],
-  ['Quantum algorithms','The recipes — Grover, Shor, VQE, QAOA — that arrange interference to reach an answer.'],
-  ['SDK / software','Kits like Qiskit, Cirq or PennyLane where developers write and test quantum programs.'],
-  ['Compiler / runtime','Translates your circuit into operations the specific hardware can run, and schedules them.'],
-  ['Quantum gates','Physical pulses that rotate and entangle qubits — the assembly language of the machine.'],
-  ['Qubits','The information carriers themselves, held in a fragile quantum state.'],
-  ['Quantum hardware','Superconducting loops, trapped ions, photons or neutral atoms — the physical qubit.'],
-  ['Cryogenics / control','Dilution fridges near absolute zero, lasers and microwave electronics that keep it all coherent.'],
-];
+function loadPreset(p){ clearCircuit();
+  if(p==='bell'){ circuit.q0[0]='H'; circuit.q0[1]={cnot:'ctrl',partner:'q1'}; circuit.q1[1]={cnot:'targ',partner:'q0'}; $('selNote').textContent='Bell state loaded — H then CNOT. Now Run 200 shots.'; }
+  if(p==='super'){ circuit.q0[0]='H'; circuit.q1[0]='H'; $('selNote').textContent='Both qubits in superposition — four equally likely outcomes, no entanglement.'; }
+  renderWires(); computeCircuit(); }
+function computeCircuit(){ let st=newState2();
+  for(let col=0;col<COLS;col++){ const c0=circuit.q0[col], c1=circuit.q1[col];
+    if(c0&&typeof c0==='object'){ const ctrl=c0.cnot==='ctrl'?'q0':'q1'; const targ=ctrl==='q0'?'q1':'q0'; st=cnot2(st, ctrl==='q0'?0:1, targ==='q0'?0:1); }
+    else { if(typeof c0==='string') st=apply1_2(st,0,M[c0]); if(typeof c1==='string') st=apply1_2(st,1,M[c1]); } }
+  renderAmps(st); const conc=concurrence(st); const eb=$('entBox');
+  if(conc>0.02){ eb.className='ent yes'; eb.innerHTML='<b>Entangled.</b> The two qubits share one joint state — measuring one instantly determines the other.<span class="lvl-exp"> Concurrence '+conc.toFixed(2)+'/1.00.</span>'; }
+  else { eb.className='ent no'; eb.innerHTML='<b style="color:var(--muted)">Not entangled.</b> Each qubit has its own independent description.'; }
+  window._lastState=st; }
+function renderAmps(st){ const host=$('ampList'); host.innerHTML=''; const kets=['00','01','10','11'];
+  st.forEach((amp,i)=>{ const p=cabs2(amp); const ones=(kets[i].match(/1/g)||[]).length;
+    const color=ones===0?'var(--zero)':ones===2?'var(--one)':'linear-gradient(90deg,var(--zero),var(--one))';
+    const row=el('div','amp'); row.innerHTML='<span class="ket">|'+kets[i]+'\u27E9</span><span class="abar"><span style="width:'+(p*100).toFixed(0)+'%;background:'+color+'"></span></span><span class="pct">'+(p*100).toFixed(0)+'%</span>'; host.appendChild(row); }); }
+function runShots(){ const st=window._lastState||newState2(); const N=200; const counts={'00':0,'01':0,'10':0,'11':0};
+  const cum=[]; let acc=0; st.forEach(a=>{acc+=cabs2(a);cum.push(acc);}); const kets=['00','01','10','11'];
+  for(let s=0;s<N;s++){ const r=Math.random(); let idx=cum.findIndex(c=>r<=c); if(idx<0)idx=3; counts[kets[idx]]++; }
+  const host=$('shotsBox'); host.innerHTML=''; const max=Math.max(1,counts['00'],counts['01'],counts['10'],counts['11']);
+  kets.forEach(k=>{ const ones=(k.match(/1/g)||[]).length; const color=ones===0?'var(--zero)':ones===2?'var(--one)':'linear-gradient(180deg,var(--zero),var(--one))';
+    const col=el('div','col'); const h=Math.round(counts[k]/max*90)+2;
+    col.innerHTML='<div style="font-size:.7rem;color:var(--muted);font-family:\'IBM Plex Mono\'">'+counts[k]+'</div><div class="bar" style="height:'+h+'px;background:'+color+'"></div><div class="k">|'+k+'\u27E9</div>'; host.appendChild(col); });
+  $('shotsNote').innerHTML='200 measurements sampled. The results follow the prediction on the left — and re-running gives slightly different counts, because measurement is genuinely random.'; }
 const SOLVE=[
-  ['Optimize delivery routes for 10,000 locations.','emerg','Emerging fit',[
-    ['Problem','A classic combinatorial optimization (vehicle routing) — enormous number of possible route combinations.'],
-    ['Classical today','Excellent heuristic solvers (OR-Tools, metaheuristics) already handle this well at industrial scale.'],
-    ['Quantum angle','Quantum annealers and QAOA target exactly this shape of problem, mapping routes to an energy landscape.'],
-    ['Current feasibility','Today\'s quantum hardware is too small/noisy to beat the best classical solvers on real 10k-location instances.'],
-    ['Future potential','A plausible medium-term application if fault-tolerant machines scale — but classical will remain a strong baseline.']
-  ]],
-  ['Simulate how a new drug molecule behaves.','good','Strong fit',[
-    ['Problem','Molecular energy and dynamics are governed by quantum mechanics — inherently a quantum problem.'],
-    ['Classical today','Approximations (DFT) are useful but scale badly and lose accuracy for strongly-correlated systems.'],
-    ['Quantum angle','Quantum computers can represent quantum states natively — the original motivation for the whole field.'],
-    ['Current feasibility','Small molecules demonstrated; useful drug-scale simulation still awaits better hardware and error correction.'],
-    ['Future potential','One of the most credible "quantum advantage" domains — chemistry and materials.']
-  ]],
-  ['Sort a list of a million names alphabetically.','no','Not a fit',[
-    ['Problem','A well-understood classical task with optimal algorithms.'],
-    ['Classical today','Sorts in milliseconds; nothing to improve.'],
-    ['Quantum angle','No known quantum speedup — quantum doesn\'t help with everyday deterministic data processing.'],
-    ['Current feasibility','Using a quantum computer here would be slower and pointless.'],
-    ['Future potential','Still not a fit. Quantum advantage is about specific structure, not general speed.']
-  ]],
-  ['Find one item in a giant unsorted database.','emerg','Modest fit',[
-    ['Problem','Unstructured search — no index, no ordering to exploit.'],
-    ['Classical today','On average you check half the entries: linear time.'],
-    ['Quantum angle','Grover\'s algorithm gives a quadratic speedup — roughly √N steps instead of N.'],
-    ['Current feasibility','Quadratic gains are real but modest, and the overhead of loading data can erase them on today\'s hardware.'],
-    ['Future potential','Useful for some search-shaped subproblems; not a magic universal database accelerator.']
-  ]],
+  ['Design a new medicine molecule','good','Strong fit','Molecules obey quantum rules, so a quantum computer can represent them naturally. This is the original reason the field exists — chemistry and materials are its most credible use.'],
+  ['Find one item in a giant unsorted list','emerg','Modest fit','A quantum method (Grover\u2019s) can search in roughly \u221AN steps instead of N — a real but modest speedup, and loading the data can eat the gains on today\u2019s hardware.'],
+  ['Plan delivery routes for 10,000 stops','emerg','Emerging fit','A classic optimization problem quantum methods target — but excellent classical solvers already do this well, so quantum has to earn its place here.'],
+  ['Sort a million names alphabetically','no','Not a fit','Everyday data tasks have fast, optimal classical algorithms and no known quantum speedup. Using quantum here would be slower and pointless.'],
 ];
+function renderSolve(){ const host=$('solveList'); if(!host) return; host.innerHTML='';
+  SOLVE.forEach(item=>{ const q=item[0],cls=item[1],verdict=item[2],body=item[3]; const d=el('details','solve');
+    d.innerHTML='<summary>'+q+'<span class="verdict '+cls+'">'+verdict+'</span></summary><div class="body"><div class="r"><span>'+body+'</span></div></div>'; host.appendChild(d); }); }
 const TIMELINE=[
-  ['2024','Below-threshold error correction','Google\'s Willow (105 qubits) showed that adding physical qubits can lower the logical error rate — a real proof point.<sup>1</sup> NIST also finalized post-quantum crypto standards.<sup>3</sup>','good','Happened'],
-  ['2026','Targeted quantum advantage','IBM\'s Nighthawk (120 qubits) aims to show advantage on a genuinely useful computation by year end; others chase similar demos.<sup>2</sup>','plaus','Plausible'],
-  ['2028','Stronger error correction','Steadily better logical qubits and lower error rates as codes and hardware co-evolve. Expected direction, uncertain pace.','dep','Research-dependent'],
-  ['2029','First fault-tolerant systems','IBM and Google both target early fault-tolerant machines around here. A major milestone if hit on schedule.<sup>2</sup>','dep','Research-dependent'],
-  ['2033–35','Cryptographically-relevant machine','Independent "Q-Day" estimates cluster here for a computer able to threaten RSA-2048 — hence 2030 migration deadlines.<sup>4</sup>','plaus','Plausible'],
-  ['2035','Commercial quantum applications','Chemistry, materials and select optimization move from demos to routine industrial use — if scaling holds.','dep','Research-dependent'],
-  ['2040+','Quantum + AI + classical','Hybrid computing where quantum accelerators sit beside GPUs for the narrow tasks they\'re best at.','spec','Speculative'],
+  ['2024','Below-threshold error correction','Google\u2019s Willow (105 qubits) showed that adding physical qubits can lower the error rate — a real proof point. NIST also finalized post-quantum crypto standards.','var(--good)','Happened'],
+  ['2026','Targeted quantum advantage','IBM\u2019s Nighthawk (120 qubits) aims to show advantage on a useful computation; others chase similar demos.','var(--plaus)','Plausible'],
+  ['2029','First fault-tolerant systems','IBM and Google both target early fault-tolerant machines around here — a major milestone if hit on time.','var(--dep)','Research-dependent'],
+  ['2033\u201335','Code-breaking-capable machine','Independent \u201CQ-Day\u201D estimates cluster here for a computer that could threaten RSA-2048 — hence 2030 migration deadlines.','var(--plaus)','Plausible'],
+  ['2040+','Quantum + AI + classical','Hybrid computing where quantum accelerators sit beside GPUs for the narrow tasks they\u2019re best at.','var(--spec)','Speculative'],
 ];
+function renderTimeline(){ const host=$('tlDetailed'); if(!host) return; host.innerHTML='';
+  TIMELINE.forEach(t=>{ const when=t[0],title=t[1],desc=t[2],color=t[3],conf=t[4]; const row=el('div','row');
+    row.innerHTML='<div class="dot" style="background:'+color+'"></div><div><div class="when">'+when+'</div><h4>'+title+'</h4><p>'+desc+'</p><span class="conf"></span></div>';
+    const c=row.querySelector('.conf'); c.textContent=conf; c.style.color=color; c.style.border='1px solid '+color; host.appendChild(row); }); }
 const BUILDERS=[
-  ['IBM','Superconducting','Heron/Nighthawk processors; published roadmap to fault tolerance via qLDPC codes ~2029.','Nighthawk — 120 qubits, 2025'],
-  ['Google','Superconducting','Willow demonstrated below-threshold error correction; targeting a useful error-corrected machine.','Willow — 105 qubits, Dec 2024'],
-  ['Quantinuum','Trapped ion','High-fidelity trapped-ion systems; strong logical-qubit demonstrations.','Helios — 98 qubits, 2025'],
-  ['IonQ','Trapped ion','Compact trapped-ion machines; record two-qubit gate fidelity in late 2025.','~99.99% 2Q fidelity, Oct 2025'],
-  ['Microsoft','Topological','Betting on topological qubits for lower error overhead if they scale.','Majorana 1 chip, Feb 2025'],
-  ['D-Wave','Quantum annealing','Annealers aimed at optimization (not universal gate-based computing).','5,000+ annealing qubits'],
-  ['Rigetti','Superconducting','Multi-chip superconducting modules; improving gate fidelity.','Ankaa/Cepheus lineups'],
-  ['PsiQuantum','Photonic','Photonic approach aiming directly at large fault-tolerant scale.','Utility-scale photonic bet'],
-  ['Universities & national labs','Mixed','Neutral atoms, spin qubits and foundational research across the US, EU, China, India and beyond.','Rapidly expanding field'],
+  ['IBM','Superconducting','Heron/Nighthawk processors; public roadmap to fault tolerance around 2029.','Nighthawk — 120 qubits, 2025'],
+  ['Google','Superconducting','Willow demonstrated below-threshold error correction.','Willow — 105 qubits, 2024'],
+  ['Quantinuum','Trapped ion','High-fidelity systems with strong logical-qubit demonstrations.','Helios — 98 qubits, 2025'],
+  ['IonQ','Trapped ion','Compact machines; record two-qubit gate fidelity in late 2025.','~99.99% 2Q fidelity, 2025'],
+  ['Microsoft','Topological','Betting on topological qubits for lower error overhead if they scale.','Majorana 1 chip, 2025'],
+  ['PsiQuantum','Photonic','Photonic approach aimed directly at large fault-tolerant scale.','Utility-scale photonic bet'],
 ];
-const SIM_YEARS=['2030','2035','2040','2050'];
-const SIM_INDS=['Healthcare','Finance','AI','Cybersecurity','Logistics','Materials'];
-// scenario matrix [year][industry] = {text, prob, conf, must:[]}
-const SCEN={};
-(function(){
-  const must={
-    hw:'Better, more stable hardware',ec:'Practical error correction',sc:'Scaling to many logical qubits',
-    algo:'Algorithmic breakthroughs',econ:'Economic viability',mig:'Crypto migration completed',data:'Efficient classical-to-quantum data loading'
-  };
-  function s(text,prob,conf,arr){return {text,prob,conf,must:arr};}
-  SCEN['2030']={
-    Healthcare:s('Early quantum chemistry pilots assist drug-candidate screening for small molecules, feeding — not replacing — classical pipelines.','Low–Medium','Moderate',[must.hw,must.ec,must.algo]),
-    Finance:s('Narrow optimization and risk-simulation experiments run on hybrid quantum-classical setups; classical methods still dominate production.','Low','Moderate',[must.hw,must.algo,must.econ]),
-    AI:s('Quantum machine learning stays a research frontier; GPUs remain the backbone of all real AI systems.','Low','High',[must.hw,must.data,must.algo]),
-    Cybersecurity:s('Organizations are actively migrating to post-quantum cryptography ahead of 2030 deadlines; no capable code-breaking machine exists yet.','High','High',[must.mig]),
-    Logistics:s('Pilot route- and schedule-optimization trials show promise on small instances but rarely beat top classical solvers.','Low–Medium','Moderate',[must.hw,must.sc]),
-    Materials:s('Simulation of simple materials and catalysts becomes a credible research tool alongside classical methods.','Medium','Moderate',[must.hw,must.ec])
-  };
-  SCEN['2035']={
-    Healthcare:s('If fault tolerance matures, quantum simulation meaningfully accelerates parts of molecular discovery for hard, strongly-correlated systems.','Medium','Moderate',[must.ec,must.sc,must.algo]),
-    Finance:s('Selected optimization and Monte-Carlo workloads run on error-corrected machines for real advantage in niche cases.','Medium','Moderate',[must.ec,must.sc,must.econ]),
-    AI:s('Quantum may accelerate specific sub-routines inside classical AI pipelines; broad quantum-AI dominance remains unproven.','Low–Medium','Low',[must.data,must.algo,must.sc]),
-    Cybersecurity:s('A cryptographically-relevant quantum computer is plausibly near; legacy public-key systems that skipped migration are unsafe. Harvest-now-decrypt-later risk materializes for old data.','Medium–High','Moderate',[must.sc,must.ec]),
-    Logistics:s('Hybrid solvers handle selected large optimization problems in production where structure suits quantum methods.','Medium','Moderate',[must.ec,must.sc]),
-    Materials:s('Quantum simulation becomes a routine part of discovering catalysts, batteries and novel compounds.','Medium–High','Moderate',[must.ec,must.sc])
-  };
-  SCEN['2040']={
-    Healthcare:s('Quantum-accelerated chemistry is a standard tool in pharma R&D for the hardest simulation problems, shortening some discovery cycles.','Medium','Low–Moderate',[must.sc,must.econ]),
-    Finance:s('Error-corrected quantum accelerators sit beside classical infrastructure for specialized optimization and simulation.','Medium','Low–Moderate',[must.sc,must.econ]),
-    AI:s('Mature hybrid quantum-classical AI handles narrow tasks with proven advantage; classical compute still does the heavy lifting.','Low–Medium','Low',[must.algo,must.data]),
-    Cybersecurity:s('A quantum-resistant internet is the norm; the migration that began in the 2020s is essentially complete for critical systems.','Medium–High','Moderate',[must.mig]),
-    Logistics:s('Large-scale routing, scheduling and supply-chain optimization routinely use quantum accelerators for suitable sub-problems.','Medium','Low–Moderate',[must.sc,must.econ]),
-    Materials:s('Designing new materials with quantum simulation is mainstream in advanced manufacturing and energy.','Medium–High','Low–Moderate',[must.sc,must.econ])
-  };
-  SCEN['2050']={
-    Healthcare:s('Quantum-native design of molecules and proteins is deeply integrated into medicine — assuming decades of sustained progress.','Medium','Low',[must.sc,must.econ,must.algo]),
-    Finance:s('Quantum and classical compute are seamlessly blended; quantum handles the problems it is genuinely best at.','Medium','Low',[must.sc,must.econ]),
-    AI:s('Whether quantum fundamentally reshapes AI by 2050 remains genuinely uncertain — a long-horizon research question, not a given.','Uncertain','Low',[must.algo,must.data,must.sc]),
-    Cybersecurity:s('Security is built around quantum-resistant methods by default; the pre-quantum era is history.','High','Low–Moderate',[must.mig]),
-    Logistics:s('Global optimization at planetary scale leans on hybrid quantum-classical infrastructure as ordinary utility.','Medium','Low',[must.sc,must.econ]),
-    Materials:s('Room-temperature superconductors, better batteries and novel catalysts may owe their discovery partly to quantum simulation.','Medium','Low',[must.sc,must.algo])
-  };
-})();
-
-/* ---------- render content sections ---------- */
-function renderStatic(){
-  // myths
-  const ml=$('mythList');
-  MYTHS.forEach(([m,r])=>{ const it=el('div','mr-item');
-    it.innerHTML='<div class="m"><span class="tag">MYTH</span><p>'+m+'</p></div><div class="r"><span class="tag">REALITY</span><p>'+r+'</p></div>'; ml.appendChild(it); });
-  // stack
-  const sl=$('stackList');
-  STACK.forEach(([t,d],i)=>{ const dt=el('details','layer');
-    dt.innerHTML='<summary><span class="n">'+String(STACK.length-i).padStart(2,'0')+'</span><span class="t">'+t+'</span><span class="plus">＋</span></summary><div class="body">'+d+'</div>'; sl.appendChild(dt); });
-  // solve
-  const solv=$('solveList');
-  SOLVE.forEach(([q,cls,label,steps])=>{ const dt=el('details','solve');
-    let body=''; steps.forEach(([k,v])=>{ body+='<div class="step"><b>'+k+':</b> '+v+'</div>'; });
-    dt.innerHTML='<summary><span class="q">'+q+'</span><span class="verdict '+cls+'">'+label+'</span></summary><div class="body">'+body+'</div>'; solv.appendChild(dt); });
-  // timeline
-  const tl=$('timeline');
-  TIMELINE.forEach(([yr,h,p,conf,cl])=>{ const n=el('div','tnode');
-    n.innerHTML='<div class="yr">'+yr+'</div><h4>'+h+'</h4><p>'+p+'</p><div class="conf '+conf+'"><span class="d"></span>'+cl+'</div>'; tl.appendChild(n); });
-  // builders
-  const bl=$('builders');
-  BUILDERS.forEach(([n,app,desc,ms])=>{ const c=el('div','builder');
-    c.innerHTML='<div class="nm"><b>'+n+'</b><span class="app">'+app+'</span></div><p>'+desc+'</p><div class="ms"><span>milestone · </span>'+ms+'</div>'; bl.appendChild(c); });
-  // simulator selectors
-  SIM_YEARS.forEach((y,i)=>{ const b=el('button','opt',y); b.dataset.year=y; b.setAttribute('aria-pressed',String(i===1));
-    b.onclick=()=>{ document.querySelectorAll('#simYears .opt').forEach(o=>o.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); simState.year=y; renderScenario(); }; $('simYears').appendChild(b); });
-  SIM_INDS.forEach((ind,i)=>{ const b=el('button','opt',ind); b.dataset.ind=ind; b.setAttribute('aria-pressed',String(i===3));
-    b.onclick=()=>{ document.querySelectorAll('#simInds .opt').forEach(o=>o.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); simState.ind=ind; renderScenario(); }; $('simInds').appendChild(b); });
-  renderScenario();
-  // grover/shor bars animate when future/learn shown
-}
-const simState={year:'2035',ind:'Cybersecurity'};
-function renderScenario(){
-  const sc=SCEN[simState.year][simState.ind];
-  $('scenario').innerHTML =
-    '<div class="head"><h3>'+simState.year+' — '+simState.ind+'</h3></div>'+
-    '<p style="color:var(--muted);margin-top:8px">'+sc.text+'</p>'+
-    '<div class="meta"><div class="m"><div class="l">PROBABILITY</div><div class="v">'+sc.prob+'</div></div>'+
-    '<div class="m"><div class="l">CONFIDENCE</div><div class="v">'+sc.conf+'</div></div></div>'+
-    '<div class="must"><div class="l">WHAT MUST HAPPEN FIRST</div><ul>'+sc.must.map(m=>'<li>'+m+'</li>').join('')+'</ul></div>';
-}
-
-/* animate algorithm bars */
-let algoDone=false;
-function animateAlgos(){ if(algoDone)return; algoDone=true;
-  setTimeout(()=>{ $('grovC').style.width='100%'; $('grovQ').style.width='34%';
-    $('shorC').style.width='100%'; $('shorQ').style.width='9%'; },200);
-}
-
-/* ============================================================
-   PERSONA + PATHS
-   ============================================================ */
-const PERSONAS={
-  student:{label:'Student',path:['Qubits','Superposition','Gates','Circuits','Algorithms','Future']},
-  developer:{label:'Software engineer',path:['Qubits','Gates','Circuits','Algorithms','SDKs','Hardware']},
-  aiml:{label:'AI / ML professional',path:['Qubits','Superposition','Quantum + AI','Algorithms','Limitations','Future']},
-  pm:{label:'Product manager',path:['Basics','Capabilities','Use cases','Business impact','Strategy']},
-  business:{label:'Business leader',path:['Basics','Hype vs reality','Crypto risk','Use cases','Readiness']},
-  curious:{label:'Curious explorer',path:['Bits','Qubits','Play','Break the internet?','Future']}
-};
-let persona=store.get('persona','curious');
-function renderPersonaChips(){
-  const c=$('personaChips'); c.innerHTML='';
-  Object.entries(PERSONAS).forEach(([k,v])=>{ const b=el('button','chip',v.label); b.setAttribute('aria-pressed',String(k===persona));
-    b.onclick=()=>{ persona=k; store.set('persona',k); renderPersonaChips(); applyPersona(); }; c.appendChild(b); });
-}
-function applyPersona(){
-  const v=PERSONAS[persona];
-  $('personaLabel').textContent=v.label;
-  $('pathIntro').innerHTML='Tailored for <b style="color:var(--ink)">'+v.label+'</b>. This is a suggested order — jump around freely.';
-  const pf=$('pathFlow'); pf.innerHTML='';
-  v.path.forEach((s,i)=>{ if(i)pf.appendChild(el('span','arr','→')); pf.appendChild(el('span','s',s)); });
-}
-
-/* ============================================================
-   QUIZ
-   ============================================================ */
+function renderBuilders(){ const host=$('buildersList'); if(!host) return; host.innerHTML='';
+  BUILDERS.forEach(b=>{ const c=el('div','build-card'); c.innerHTML='<div class="nm">'+b[0]+'</div><div class="ty">'+b[1]+'</div><p>'+b[2]+'</p><span class="chip2">'+b[3]+'</span>'; host.appendChild(c); }); }
 const QUIZ=[
-  ['How comfortable are you explaining what a qubit is?',['Never heard the term','I\'ve got the gist','I could explain superposition','I could write the state vector']],
-  ['Quantum gates (H, X, CNOT)?',['New to me','Seen them','I know what they do','I can reason about circuits']],
+  ['How comfortable are you with what a qubit is?',['New to me','I\u2019ve heard of it','I get the idea','I could explain it']],
+  ['Superposition?',['Unfamiliar','Vaguely','I understand it','I could teach it']],
+  ['The difference between a bit and a qubit?',['Not sure','A little','Clear on it','Very clear']],
   ['Entanglement?',['Unfamiliar','Heard of it','I understand the idea','I could describe a Bell state']],
-  ['Quantum algorithms (Grover, Shor)?',['No idea','Names only','I know what each targets','I understand the speedups']],
-  ['The threat quantum poses to encryption?',['Unaware','Vaguely','I understand the risk','I follow the Q-Day debate']],
-  ['Post-quantum cryptography (PQC)?',['Never heard of it','Heard the term','I know it\'s the defense','I know the NIST standards']],
-  ['How quantum hardware actually works?',['No clue','A little','I know the main approaches','I can compare qubit types']],
-  ['Where quantum + AI stands today?',['Unsure','Some hype awareness','I know it\'s early research','I understand the limitations']],
-  ['Real business use-cases for quantum?',['None come to mind','A couple','I know the strong-fit domains','I could advise on fit']],
-  ['Telling quantum hype from reality?',['Hard for me','Somewhat','Fairly well','Confidently']]
+  ['That measuring collapses a qubit to 0 or 1?',['News to me','Sort of','Yes','Definitely']],
+  ['Why quantum isn\u2019t just \u201Ca faster computer\u201D?',['Unsure','A bit','I get it','Crystal clear']],
+  ['The threat quantum poses to encryption?',['Unaware','Vaguely','I understand the risk','I follow the debate']],
+  ['Where quantum could actually help?',['No idea','A couple areas','The strong-fit domains','I could advise on fit']],
+  ['Where quantum + AI really stands today?',['Unsure','Some hype awareness','It\u2019s early research','I know the limits']],
+  ['Telling quantum hype from reality?',['Hard for me','Somewhat','Fairly well','Confidently']],
 ];
 let quizIdx=0, quizAns=store.get('quizAns',[]);
-function renderQuiz(){
-  const box=$('quizBox');
+function renderQuiz(){ const box=$('quizBox'); if(!box) return;
   if(quizAns.length===QUIZ.length){ renderResult(); return; }
-  quizIdx=Math.min(quizIdx,QUIZ.length-1);
-  const [q,opts]=QUIZ[quizIdx];
+  quizIdx=Math.min(quizIdx,QUIZ.length-1); const q=QUIZ[quizIdx][0], opts=QUIZ[quizIdx][1];
   box.innerHTML='<div class="qprog"><span style="width:'+(quizIdx/QUIZ.length*100)+'%"></span></div>'+
     '<div class="qq">'+q+'</div><div class="qopts" id="qopts"></div>'+
     '<div class="qnav"><span>Question '+(quizIdx+1)+' of '+QUIZ.length+'</span>'+(quizIdx>0?'<button class="chip" style="padding:4px 12px" onclick="quizBack()">Back</button>':'<span></span>')+'</div>';
-  opts.forEach((o,i)=>{ const b=el('button','qopt',o); b.onclick=()=>answer(i); $('qopts').appendChild(b); });
-}
-function answer(i){ quizAns[quizIdx]=i; store.set('quizAns',quizAns);
-  if(quizIdx<QUIZ.length-1){ quizIdx++; renderQuiz(); } else { renderResult(); updateReadiness(); } }
+  opts.forEach((o,i)=>{ const b=el('button','qopt',o); b.onclick=()=>answer(i); $('qopts').appendChild(b); }); }
+function answer(i){ quizAns[quizIdx]=i; store.set('quizAns',quizAns); if(quizIdx<QUIZ.length-1){ quizIdx++; renderQuiz(); } else { renderResult(); } }
 function quizBack(){ if(quizIdx>0){quizIdx--; renderQuiz();} }
 function quizScore(){ const raw=quizAns.reduce((a,b)=>a+(b||0),0); return Math.round(raw/(QUIZ.length*3)*100); }
-function band(score){
-  if(score<25)return['Quantum Novice','var(--zero)','You\'re at the start — the best possible place to build clean intuition.'];
-  if(score<55)return['Quantum Explorer','var(--violet)','You\'ve got real footholds. Focus next on gates, algorithms and the crypto story.'];
-  if(score<80)return['Quantum Practitioner','var(--amber)','Strong grasp. Deepen into hardware trade-offs and honest use-case sizing.'];
-  return['Quantum Strategist','var(--one)','You can separate signal from hype — now track the frontier and advise others.'];
-}
-function renderResult(){
-  const score=quizScore(); const [b,color,msg]=band(score);
-  const rec = score<40?['Qubits','Gates','Circuits','Crypto risk'] : score<70?['Algorithms','Hardware','Quantum + AI','Business fit'] : ['Frontier tracking','Error correction','Advising others'];
-  $('quizBox').innerHTML=
-    '<div class="result"><div class="score">'+score+'</div><div class="mono" style="color:var(--muted)">/ 100</div>'+
-    '<div class="band" style="color:'+color+'">'+b+'</div>'+
-    '<p class="kicker" style="margin:10px auto 0;max-width:44ch">'+msg+'</p>'+
-    '<div class="pathbox"><div class="l">RECOMMENDED NEXT</div><div class="pathflow">'+rec.map((r,i)=>(i?'<span class="arr">→</span>':'')+'<span class="s">'+r+'</span>').join('')+'</div></div>'+
-    '<button class="btn" style="margin-top:16px" onclick="retakeQuiz()">Retake quiz</button></div>';
-  updateReadiness();
-}
-function retakeQuiz(){ quizAns=[]; quizIdx=0; store.set('quizAns',[]); renderQuiz(); updateReadiness(); }
-function updateReadiness(){
-  const done=quizAns.length===QUIZ.length;
-  const score=done?quizScore():0;
-  $('homeReadyRail').style.width=(done?score:0)+'%';
-  $('homeReadyPct').textContent = done? score+'% ready' : 'Take the quiz →';
-}
-
-/* ============================================================
-   NAV / ROUTING / PROGRESS
-   ============================================================ */
-const VIEWS=['home','learn','lab','future','progress'];
+function band(score){ if(score<25)return['Quantum Novice','var(--zero)','You\u2019re at the start — the best place to build clean intuition.'];
+  if(score<55)return['Quantum Explorer','var(--violet)','Real footholds. Focus next on entanglement and the crypto story.'];
+  if(score<80)return['Quantum Practitioner','var(--amber)','Strong grasp. Deepen into where quantum genuinely fits.'];
+  return['Quantum Strategist','var(--one)','You can separate signal from hype — now track the frontier.']; }
+function renderResult(){ const score=quizScore(); const bd=band(score); const b=bd[0],color=bd[1],msg=bd[2];
+  const topics=['Qubits','Superposition','Bit vs qubit','Entanglement','Measurement','Why it\u2019s different','Crypto risk','Use-cases','Quantum + AI','Hype vs reality'];
+  const strong=[], grow=[]; quizAns.forEach((a,i)=>{ (a>=2?strong:grow).push(topics[i]); });
+  const rec=(grow.length?grow:strong).slice(0,4);
+  let sHtml=''; if(strong.length) sHtml='<div class="strengths">'+strong.slice(0,4).map(s=>'<div class="s"><span class="i">\u2705</span>You understand <b>'+s+'</b></div>').join('')+'</div>';
+  $('quizBox').innerHTML='<div class="result"><div class="score">'+score+'</div><div class="mono" style="color:var(--muted)">/ 100</div>'+
+    '<div class="band" style="color:'+color+'">'+b+'</div><p class="kicker" style="margin:10px auto 0;max-width:44ch">'+msg+'</p>'+ sHtml +
+    '<div class="pathbox"><div class="l">Explore next</div><div class="pathflow">'+rec.map((r,i)=>(i?'<span class="arr">\u2192</span>':'')+'<span class="s">'+r+'</span>').join('')+'</div></div>'+
+    '<div style="display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap"><button class="btn" onclick="retakeQuiz()">Retake</button><button class="btn primary" onclick="startJourney()">Revisit the journey</button></div></div>'; }
+function retakeQuiz(){ quizAns=[]; quizIdx=0; store.set('quizAns',[]); renderQuiz(); }
+const VIEWS=['home','learn','lab','why','future','progress'];
 let visited=new Set(store.get('visited',['home']));
-function go(v){
+function go(v){ if(VIEWS.indexOf(v)<0) v='home';
   VIEWS.forEach(id=>{ $(id).classList.toggle('active', id===v); });
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected', String(t.dataset.view===v)));
-  window.scrollTo({top:0,behavior:'instant'in window?'instant':'auto'});
-  visited.add(v); store.set('visited',[...visited]); updateExplored();
-  if(v==='learn'){ animateAlgos(); heroB&&learnB&&learnB.redraw(); }
+  window.scrollTo({top:0,behavior:'instant' in window?'instant':'auto'});
+  visited.add(v); store.set('visited',Array.from(visited)); updateExplored();
+  if(v==='learn'){ if(!jBuilt) buildJourney(); showStep(jIdx); }
   if(v==='lab'){ labB&&labB.redraw(); }
-  if(v==='future'){ animateAlgos(); }
-  history.replaceState(null,'','#'+v);
+  try{ history.replaceState(null,'','#'+v); }catch(e){ /* sandboxed/opaque origin — ignore */ }
 }
-function updateExplored(){
-  const pct=Math.round(visited.size/VIEWS.length*100);
-  const r=$('exploredRail'); if(r){ r.style.width=pct+'%'; $('exploredPct').textContent=pct+'% ('+visited.size+'/'+VIEWS.length+')'; }
-}
-
-/* ============================================================
-   PWA: register service worker for offline-after-first-load
-   ============================================================ */
-function registerPWA(){
-  if(!('serviceWorker' in navigator)) return;
-  // Only register on a real http(s) origin (skips file:// previews)
+function updateExplored(){ const pct=Math.round(visited.size/VIEWS.length*100); const r=$('exploredRail');
+  if(r){ r.style.width=pct+'%'; $('exploredPct').textContent=pct+'% ('+visited.size+' of '+VIEWS.length+' sections)'; } }
+function updateResume(){ const line=$('resumeLine'); if(!line) return;
+  if(jIdx>0 && jIdx<STEPS.length){ line.innerHTML='You left off at step '+(jIdx+1)+'. <a href="#learn" onclick="go(\'learn\');return false;">Resume \u2192</a>'; } else line.textContent=''; }
+function registerPWA(){ if(!('serviceWorker' in navigator)) return;
   if(location.protocol!=='https:' && location.hostname!=='localhost' && location.hostname!=='127.0.0.1') return;
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
-
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }); }
 function init(){
   registerPWA();
-  initStages();
-  renderStatic();
-  buildPalette(); renderWires(); computeCircuit();
-  renderPersonaChips(); applyPersona();
-  renderQuiz(); updateReadiness(); updateExplored();
-  const h=location.hash.replace('#',''); if(VIEWS.includes(h)) go(h); else go('home');
+  setLevel(level);
+  document.querySelectorAll('#levelCtl button').forEach(b=>b.onclick=()=>setLevel(b.dataset.lvl));
+  document.querySelectorAll('#levelPick .lp').forEach(b=>b.onclick=()=>setLevel(b.dataset.lvl));
+  const hb=makeBloch('homeBloch', null, {compact:true}); if(hb){ hb.setState(C(S2,0),C(S2,0)); }
+  initLab(); buildPalette(); renderWires(); computeCircuit();
+  renderSolve(); renderTimeline(); renderBuilders(); renderQuiz();
+  updateExplored(); updateResume();
+  const h=location.hash.replace('#',''); go(VIEWS.indexOf(h)>=0?h:'home');
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 </script>

@@ -5,7 +5,7 @@
      so the whole app + fonts are available offline once visited.
    Bump CACHE when you ship a new build to force an update. */
 
-const CACHE = 'quantumx-v1';
+const CACHE = 'quantumx-v3';
 
 /* Core same-origin assets. The HTML document itself is cached at runtime on
    first navigation, so this works whether the page is index.html or
